@@ -5,6 +5,6 @@ namespace MyBlockChain.Transactions.InputsOutputs
 {
     public interface ICalculateInputs
     {
-        public List<Input> GetEnoughInputsFor(Amount amount);
+        public List<Input> GetEnoughInputsFor(Wallet sender,Amount amount);
     }
 }

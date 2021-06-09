@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+
 using MyBlockChain.General;
 using MyBlockChain.Transactions;
 
@@ -9,19 +10,19 @@ namespace MyBlockChain.Blocks
 
     public class Block
     {
-        private Transactions _transactions;
+        public Transactions Transactions;
 
         private Block(BlockHeader header,
             Transactions transactions)
         {
-            _transactions = transactions;
+            Transactions = transactions;
             Header = header;
         }
 
         public BlockHeader Header { get; }
 
 
-        private static Block Genesis(Address miner,
+        public static Block Genesis(Address miner,
             ITransactionFactory transactionFactory) =>
             new(new BlockHeader(DateTime.Now.TimeOfDay,
                     "",
@@ -53,5 +54,17 @@ namespace MyBlockChain.Blocks
                         data.Difficulty),
                     transactions.AddFirst(
                         transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine))));
+
+        public static Block MineGift(Address miner,
+            IBlockMineStrategy strategy,
+            ITransactionFactory transactionFactory) =>
+            strategy.Mine(data =>
+                new Block(new BlockHeader(data.TimeSpan,
+                        data.LastHash,
+                        data.Hash,
+                        data.Data,
+                        data.Nonce,
+                        data.Difficulty),
+                    new Transactions(transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine))));
     }
 }

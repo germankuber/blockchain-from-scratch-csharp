@@ -1,12 +1,24 @@
-﻿namespace MyBlockChain.General
-{
-    public class Hash
-    {
-        private readonly string _value = "";
+﻿using CSharpFunctionalExtensions;
+using MyBlockChain.Transactions;
 
-        public static explicit operator string(Hash b)
+namespace MyBlockChain.General
+{
+    public class Hash : ValueObject<Hash>
+    {
+        private readonly string _value;
+
+        public Hash(string value)
         {
-            return b._value;
+            _value = value;
         }
+
+        public static implicit operator string(Hash hash) =>
+            hash._value;
+
+        protected override bool EqualsCore(Hash other) =>
+            _value == other._value;
+
+        protected override int GetHashCodeCore() =>
+            _value.GetHashCode();
     }
 }

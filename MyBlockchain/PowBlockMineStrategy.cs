@@ -6,7 +6,7 @@ using MyBlockChain.General;
 
 namespace MyBlockChain
 {
-    internal class PowBlockMineStrategy : IBlockMineStrategy
+    public class PowBlockMineStrategy : IBlockMineStrategy
     {
         private const int FirstNonce = 1;
         private readonly string _data;
@@ -18,24 +18,20 @@ namespace MyBlockChain
             _data = data;
         }
 
-        public Block Mine(Func<IBlockMineStrategy.BlockData, Block> createBlock)
-        {
-            return MineBlock(DateTime.Now.TimeOfDay,
-                _lastBlock.Header.LastHash,
+        public Block Mine(Func<IBlockMineStrategy.BlockData, Block> createBlock) =>
+            MineBlock(DateTime.Now.TimeOfDay,
+                _lastBlock.Header.Hash,
                 _data,
                 FirstNonce,
                 BlockChainConfig.GetActualDifficulty(),
                 createBlock);
-        }
 
-        public string GetBlockHash(Block block)
-        {
-            return CreateHash(block.Header.TimeSpan,
+        public string GetBlockHash(Block block) =>
+            CreateHash(block.Header.TimeSpan,
                 block.Header.LastHash,
                 block.Header.Data,
                 block.Header.Nonce,
                 block.Header.Difficulty);
-        }
 
         private Block MineBlock(TimeSpan timeSpan,
             string lastHash,
@@ -60,9 +56,8 @@ namespace MyBlockChain
                 new IBlockMineStrategy.BlockData(timeSpan, lastHash, actualHash, data, nonce, difficulty));
         }
 
-        private static string CreateHash(TimeSpan timeSpan, string lastHash, string data, int nonce, int difficulty)
-        {
-            return HashUtilities.Hash(new
+        private static string CreateHash(TimeSpan timeSpan, string lastHash, string data, int nonce, int difficulty) =>
+            HashUtilities.Hash(new
             {
                 TimeSpan = timeSpan,
                 LastHash = lastHash,
@@ -70,6 +65,5 @@ namespace MyBlockChain
                 Difficulty = difficulty,
                 Nonce = nonce
             });
-        }
     }
 }

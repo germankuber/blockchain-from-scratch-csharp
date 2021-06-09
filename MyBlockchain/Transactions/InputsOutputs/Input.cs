@@ -5,16 +5,24 @@ namespace MyBlockChain.Transactions.InputsOutputs
     public class Input
     {
         public Input(int transactionOutputPosition,
-            Hash transactionHash,
-            string signature)
+            TransactionId transactionId,
+            SignatureMessage signature)
         {
             TransactionOutputPosition = transactionOutputPosition;
-            TransactionHash = transactionHash;
+            TransactionHash = transactionId.Hash;
+            Signature = signature;
+        }
+        public Input(int transactionOutputPosition,
+            Hash hash,
+            SignatureMessage signature)
+        {
+            TransactionOutputPosition = transactionOutputPosition;
+            TransactionHash = hash;
             Signature = signature;
         }
 
         public Hash TransactionHash { get; }
         public int TransactionOutputPosition { get; }
-        public string Signature { get; }
+        public SignatureMessage Signature { get; }
     }
 }

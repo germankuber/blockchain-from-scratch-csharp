@@ -5,7 +5,8 @@ namespace MyBlockChain.Transactions.InputsOutputs
 {
     public class Output
     {
-        private IScriptBlock _scriptBlock;
+        private readonly IScriptBlock _scriptBlock;
+        public OutputStateEnum State { get; private set; } = OutputStateEnum.UTXO;
 
         public Output(Amount value,
             Address receiver,
@@ -14,6 +15,13 @@ namespace MyBlockChain.Transactions.InputsOutputs
             Amount = value;
             Receiver = receiver;
             _scriptBlock = scriptBlockFactory.Create(receiver);
+        }
+
+        public bool Spend(string privateKey)
+        {
+            //TODO: Verify the way to mark as spent
+            State = OutputStateEnum.Spent;
+            return _scriptBlock.Excecute(privateKey);
         }
 
         public Amount Amount { get; }

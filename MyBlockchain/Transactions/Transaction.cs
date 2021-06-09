@@ -8,7 +8,6 @@ namespace MyBlockChain.Transactions
     public class Transaction
     {
         private readonly ITransactionIdStrategy _transactionIdStrategy;
-
         protected Transaction(List<Input> inputs,
             List<Output> outputs,
             ITransactionIdStrategy transactionIdStrategy)
@@ -34,12 +33,12 @@ namespace MyBlockChain.Transactions
             ICalculateOutputs calculateOutputs,
             ITransactionIdStrategy transactionIdStrategy)
         {
-            if (sender.Amount < amount)
+            if (sender.GetBalance() <= amount)
                 return Result.Failure<Transaction>("You do not have enough money");
 
-            var inputs = calculateInputs.GetEnoughInputsFor(amount);
+            var inputs = calculateInputs.GetEnoughInputsFor(sender,amount);
             return new Transaction(inputs,
-                calculateOutputs.Calculate(inputs, amount),
+                calculateOutputs.Calculate(sender, receiver,inputs, amount),
                 transactionIdStrategy);
         }
 
