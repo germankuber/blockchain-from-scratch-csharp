@@ -11,11 +11,15 @@ namespace MyBlockChain.Transactions.InputsOutputs
     {
         private readonly BlockChain _blockChain;
         private readonly IScriptBlockFactory _scriptBlockFactory;
+        private readonly IFeeCalculation _feeCalculation;
 
-        public CalculateOutputs(BlockChain blockChain, IScriptBlockFactory scriptBlockFactory)
+        public CalculateOutputs(BlockChain blockChain,
+            IScriptBlockFactory scriptBlockFactory,
+            IFeeCalculation feeCalculation)
         {
             _blockChain = blockChain;
             _scriptBlockFactory = scriptBlockFactory;
+            _feeCalculation = feeCalculation;
         }
 
         public List<Output> Calculate(Wallet sender, Address receiver, List<Input> inputs, Amount amount)
@@ -38,7 +42,7 @@ namespace MyBlockChain.Transactions.InputsOutputs
                 var outputToReturnExtraMoney = totalToSpend - amount;
                 outputs.Add(new Output(outputToReturnExtraMoney, sender.Address, _scriptBlockFactory));
             }
-           
+
 
             return outputs;
         }

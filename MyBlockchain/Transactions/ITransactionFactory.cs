@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using MyBlockChain.Blocks;
 using MyBlockChain.General;
 
 namespace MyBlockChain.Transactions
@@ -7,7 +8,8 @@ namespace MyBlockChain.Transactions
     {
         Result<Transaction> Create(Wallet sender,
             Address receiver,
-            Amount amount);
+            Amount amount, 
+            BlockChain blockChain);
 
         Transaction CreateCoinBase(Address receiver,
             Amount amount);

@@ -16,7 +16,7 @@ namespace MyBlockChain.General
         public static explicit operator decimal(Amount b) =>
             b._value;
 
-        public static explicit operator Amount(decimal b) =>
+        public static implicit operator Amount(decimal b) =>
             new(Convert.ToInt32(b));
 
         public static bool operator <=(Amount lhs, Amount rhs) =>

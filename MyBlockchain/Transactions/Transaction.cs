@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+using MyBlockChain.Blocks;
 using MyBlockChain.General;
 using MyBlockChain.Transactions.InputsOutputs;
 
@@ -8,6 +9,8 @@ namespace MyBlockChain.Transactions
     public class Transaction
     {
         private readonly ITransactionIdStrategy _transactionIdStrategy;
+        private static BlockChain _blockChain;
+
         protected Transaction(List<Input> inputs,
             List<Output> outputs,
             ITransactionIdStrategy transactionIdStrategy)
@@ -31,8 +34,10 @@ namespace MyBlockChain.Transactions
             Amount amount,
             ICalculateInputs calculateInputs,
             ICalculateOutputs calculateOutputs,
-            ITransactionIdStrategy transactionIdStrategy)
+            ITransactionIdStrategy transactionIdStrategy, 
+            BlockChain blockChain)
         {
+            _blockChain = blockChain;
             if (sender.GetBalance() <= amount)
                 return Result.Failure<Transaction>("You do not have enough money");
 
@@ -44,8 +49,7 @@ namespace MyBlockChain.Transactions
 
         public Amount GetTotalFee()
         {
-            //var inputTotalAmount = Inputs.Sum(x=> x.)
-            var inputTotalAmount = Amount.Create(1);
+            var inputTotalAmount = Inputs.GetTotalAmount(_blockChain);
             var outputTotalAmount = Outputs.GetTotalAmount();
 
             return inputTotalAmount - outputTotalAmount;

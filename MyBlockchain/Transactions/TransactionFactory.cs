@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+using MyBlockChain.Blocks;
 using MyBlockChain.General;
 using MyBlockChain.Transactions.InputsOutputs;
 using MyBlockChain.Transactions.InputsOutputs.Scripts;
@@ -29,22 +30,20 @@ namespace MyBlockChain.Transactions
 
         public Result<Transaction> Create(Wallet sender,
             Address receiver,
-            Amount amount)
-        {
-            return Transaction.NewTransaction(sender,
+            Amount amount, 
+            BlockChain blockChain) =>
+            Transaction.NewTransaction(sender,
                     receiver,
                     amount,
                     _calculateInputs,
                     _calculateOutputs,
-                    _transactionIdStrategy)
+                    _transactionIdStrategy,
+                    blockChain)
                 .Bind(_validateTransaction.Validate);
-        }
 
         public Transaction CreateCoinBase(Address receiver,
-            Amount amount)
-        {
-            return new CoinBaseTransaction(new List<Output> {new(amount, receiver, _scriptBlockFactory) },
+            Amount amount) =>
+            new CoinBaseTransaction(new List<Output> {new(amount, receiver, _scriptBlockFactory) },
                 _transactionIdStrategy);
-        }
     }
 }

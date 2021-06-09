@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.15.3" />
+    <PackageReference Include="merkleroot" Version="1.0.4" />
     <PackageReference Include="NetCoreServer" Version="5.1.0" />
     <PackageReference Include="Rebex.Elliptic.Curve25519" Version="1.2.1" />
     <PackageReference Include="Rebex.Elliptic.Ed25519" Version="1.2.1" />

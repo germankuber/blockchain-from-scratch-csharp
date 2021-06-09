@@ -29,7 +29,8 @@ namespace MyBlockChain.Blocks
                     string.Concat(Enumerable.Repeat("0", 18)),
                     "",
                     1,
-                    1),
+                    1,
+                    new Transactions()),
                 new Transactions(transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine)));
 
         public static Block Genesis() =>
@@ -38,33 +39,43 @@ namespace MyBlockChain.Blocks
                     string.Concat(Enumerable.Repeat("0", 18)),
                     "",
                     1,
-                    1),
+                    1,
+                    new Transactions()),
                 new Transactions());
 
         public static Block Mine(Address miner,
             IBlockMineStrategy strategy,
             Transactions transactions,
-            ITransactionFactory transactionFactory) =>
-            strategy.Mine(data =>
+            ITransactionFactory transactionFactory)
+        {
+           var transactionsNew= transactions.AddFirst(
+                transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine));
+            return strategy.Mine(data =>
                 new Block(new BlockHeader(data.TimeSpan,
                         data.LastHash,
                         data.Hash,
                         data.Data,
                         data.Nonce,
-                        data.Difficulty),
-                    transactions.AddFirst(
-                        transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine))));
+                        data.Difficulty,
+                        transactions),
+                    transactionsNew));
+        }
 
         public static Block MineGift(Address miner,
             IBlockMineStrategy strategy,
-            ITransactionFactory transactionFactory) =>
-            strategy.Mine(data =>
+            ITransactionFactory transactionFactory)
+        {
+            var transactions =
+                new Transactions(transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine));
+            return strategy.Mine(data =>
                 new Block(new BlockHeader(data.TimeSpan,
                         data.LastHash,
                         data.Hash,
                         data.Data,
                         data.Nonce,
-                        data.Difficulty),
-                    new Transactions(transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine))));
+                        data.Difficulty,
+                        transactions),
+                    transactions));
+        }
     }
 }

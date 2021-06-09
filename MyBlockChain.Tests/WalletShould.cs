@@ -10,7 +10,7 @@ using MyBlockChain.General;
 using MyBlockChain.Transactions;
 using MyBlockChain.Transactions.InputsOutputs;
 using MyBlockChain.Transactions.InputsOutputs.Scripts;
-
+using MyBlockChain.Transactions.MemoryPool;
 using Xunit;
 using static System.String;
 
@@ -23,6 +23,8 @@ namespace MyBlockChain.Tests
         private readonly Wallet _sut;
         private readonly ITransactionFactory _transactionFactory;
 
+        private readonly IUnconfirmedTransactionPool _unconfirmedTransactionPool
+            = new UnconfirmedTransactionPool(new ValidateTransaction());
         public WalletShould()
         {
             _blockChain = new BlockChain();
@@ -31,12 +33,10 @@ namespace MyBlockChain.Tests
             _transactionFactory = new TransactionFactory(new ValidateTransaction(),
                 new CalculateTransactionIdStrategy(),
                 new CalculateInputs(_blockChain),
-                new CalculateOutputs(_blockChain, new ScriptBlockFactory()),
+                new CalculateOutputs(_blockChain, new ScriptBlockFactory(), new FeeCalculation()),
                 new ScriptBlockFactory());
 
-            _sut = new Wallet(_blockChain, _feeCalculationMock.Object,
-                _transactionFactory,
-                Amount.Create(1000));
+            _sut = CreateWallet();
         }
 
         [Fact]
@@ -59,13 +59,35 @@ namespace MyBlockChain.Tests
 
         //}
 
-        [Theory]
-        [InlineData(3,12)]
-        [InlineData(7, 28)]
-        public void Make_Transaction(int spendAmount, int finalBalance)
+        //[Theory]
+        //[InlineData(3,12)]
+        //[InlineData(7, 28)]
+        //public void Make_Transaction_Successfully(int spendAmount, int finalBalance)
+        //{
+        //    var wallet2 = CreateWallet();
+
+
+        //    Enumerable.Range(1, 3).Aggregate(Block.Genesis(),
+        //        (_, _) => _blockChain.AddBlock(Block.Mine(_sut.Address,
+        //            new PowBlockMineStrategy(_blockChain.Blocks.Last(), Empty),
+        //            new Blocks.Transactions(),
+        //            _transactionFactory)).Value);
+
+
+        //    Enumerable.Range(1, 4).Aggregate(Block.Genesis(),
+        //        (_, _) => _blockChain.AddBlock(Block.Mine(_sut.Address,
+        //            new PowBlockMineStrategy(_blockChain.Blocks.Last(), Empty),
+        //            new Blocks.Transactions(_sut.MakeTransaction(wallet2.Address, Amount.Create(spendAmount)).Value),
+        //            _transactionFactory)).Value);
+        //    int balance = wallet2.GetBalance();
+
+        //    balance.Should().Be(finalBalance);
+        //    _blockChain.Blocks.Count.Should().Be(8);
+        //}
+        [Fact]
+        public void Make_Transaction_Add_Transaction_To_Memory_Pool()
         {
             var wallet2 = CreateWallet();
-
 
             Enumerable.Range(1, 3).Aggregate(Block.Genesis(),
                 (_, _) => _blockChain.AddBlock(Block.Mine(_sut.Address,
@@ -74,18 +96,19 @@ namespace MyBlockChain.Tests
                     _transactionFactory)).Value);
 
 
-            Enumerable.Range(1, 4).Aggregate(Block.Genesis(),
-                (_, _) => _blockChain.AddBlock(Block.Mine(_sut.Address,
-                    new PowBlockMineStrategy(_blockChain.Blocks.Last(), Empty),
-                    new Blocks.Transactions(_sut.MakeTransaction(wallet2.Address, Amount.Create(spendAmount)).Value),
-                    _transactionFactory)).Value);
-            int balance = wallet2.GetBalance();
-            balance.Should().Be(finalBalance);
+            var newTransaction = _sut.MakeTransaction(wallet2.Address, Amount.Create(12));
 
+            _unconfirmedTransactionPool.TotalTransactions().Should().Be(1);
+            _unconfirmedTransactionPool.GetBestTransactions(1)
+                .Value
+                .FirstOrDefault()
+                .TransactionId
+                .Should()
+                .Be(newTransaction.Value.TransactionId);
         }
-
         private Wallet CreateWallet() =>
             new(_blockChain, _feeCalculationMock.Object,
-                _transactionFactory);
+                _transactionFactory,
+                _unconfirmedTransactionPool);
     }
 }
