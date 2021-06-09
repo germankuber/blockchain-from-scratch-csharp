@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using MyBlockChain.Transactions;
 
 namespace MyBlockChain.General
 {

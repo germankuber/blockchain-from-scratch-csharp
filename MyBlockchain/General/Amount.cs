@@ -2,7 +2,7 @@
 
 namespace MyBlockChain.General
 {
-    public class Amount
+    public class Amount : IComparable<Amount>
     {
         private readonly int _value;
 
@@ -31,5 +31,12 @@ namespace MyBlockChain.General
             new(lhs._value + rhs._value);
 
         public static Amount Create(int value) => new(value);
+
+        public int CompareTo(Amount other)
+        {
+            if (ReferenceEquals(this, other)) return 0;
+            if (ReferenceEquals(null, other)) return 1;
+            return _value.CompareTo(other._value);
+        }
     }
 }

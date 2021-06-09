@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 
 using FluentAssertions;
@@ -12,7 +11,6 @@ using MyBlockChain.Transactions.InputsOutputs;
 using MyBlockChain.Transactions.InputsOutputs.Scripts;
 using MyBlockChain.Transactions.MemoryPool;
 using Xunit;
-using static System.String;
 
 namespace MyBlockChain.Tests
 {
@@ -22,7 +20,7 @@ namespace MyBlockChain.Tests
         private readonly Mock<IFeeCalculation> _feeCalculationMock;
         private readonly Wallet _sut;
         private readonly ITransactionFactory _transactionFactory;
-
+        private readonly PowBlockMineStrategy _powBlockMineStrategy = new();
         private readonly IUnconfirmedTransactionPool _unconfirmedTransactionPool
             = new UnconfirmedTransactionPool(new ValidateTransaction());
         public WalletShould()
@@ -91,7 +89,9 @@ namespace MyBlockChain.Tests
 
             Enumerable.Range(1, 3).Aggregate(Block.Genesis(),
                 (_, _) => _blockChain.AddBlock(Block.Mine(_sut.Address,
-                    new PowBlockMineStrategy(_blockChain.Blocks.Last(), Empty),
+                    _blockChain.LastBlock(),
+                    "",
+                    _powBlockMineStrategy,
                     new Blocks.Transactions(),
                     _transactionFactory)).Value);
 
@@ -106,6 +106,7 @@ namespace MyBlockChain.Tests
                 .Should()
                 .Be(newTransaction.Value.TransactionId);
         }
+      
         private Wallet CreateWallet() =>
             new(_blockChain, _feeCalculationMock.Object,
                 _transactionFactory,

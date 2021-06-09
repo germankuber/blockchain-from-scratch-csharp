@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
 
@@ -9,19 +10,17 @@ namespace MyBlockChain
     public class PowBlockMineStrategy : IBlockMineStrategy
     {
         private const int FirstNonce = 1;
-        private readonly string _data;
-        private readonly Block _lastBlock;
 
-        public PowBlockMineStrategy(Block lastBlock, string data)
+        public PowBlockMineStrategy()
         {
-            _lastBlock = lastBlock;
-            _data = data;
         }
 
-        public Block Mine(Func<IBlockMineStrategy.BlockData, Block> createBlock) =>
+        public Block Mine(Block lastBlock, 
+                          string data, 
+                          Func<IBlockMineStrategy.BlockData, Block> createBlock) =>
             MineBlock(DateTime.Now.TimeOfDay,
-                _lastBlock.Header.Hash,
-                _data,
+                lastBlock.Header.Hash,
+                data,
                 FirstNonce,
                 BlockChainConfig.GetActualDifficulty(),
                 createBlock);

@@ -16,5 +16,7 @@ namespace MyBlockChain.Transactions
 
         protected override int GetHashCodeCore() => 
             Hash.GetHashCode();
+
+      
     }
 }

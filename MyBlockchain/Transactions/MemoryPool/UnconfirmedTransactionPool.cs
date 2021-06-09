@@ -24,7 +24,8 @@ namespace MyBlockChain.Transactions.MemoryPool
                 .Tap(t => _unconfirmedTransaction.Add((t.GetTotalFee(), t)));
         public Maybe<List<Transaction>> GetBestTransactions(int countOfTransactions)
         {
-            var transactionsToOperate = _unconfirmedTransaction.OrderBy(x=> x.Item1).Take(countOfTransactions);
+            var transactionsToOperate = _unconfirmedTransaction.OrderBy(x=> x.Item1)
+                                                        .Take(countOfTransactions);
 
             //TODO: Remove from Memorypool
             //transactionsToOperate.ToList().ForEach(x => _unconfirmedTransaction.RemoveAt(0));

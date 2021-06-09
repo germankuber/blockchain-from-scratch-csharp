@@ -44,13 +44,17 @@ namespace MyBlockChain.Blocks
                 new Transactions());
 
         public static Block Mine(Address miner,
+            Block lastBlock,
+            string data,
             IBlockMineStrategy strategy,
             Transactions transactions,
             ITransactionFactory transactionFactory)
         {
-           var transactionsNew= transactions.AddFirst(
-                transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine));
-            return strategy.Mine(data =>
+            var transactionsNew = transactions.AddFirst(
+                 transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine));
+            return strategy.Mine(lastBlock,
+                data,
+                data =>
                 new Block(new BlockHeader(data.TimeSpan,
                         data.LastHash,
                         data.Hash,
@@ -59,23 +63,6 @@ namespace MyBlockChain.Blocks
                         data.Difficulty,
                         transactions),
                     transactionsNew));
-        }
-
-        public static Block MineGift(Address miner,
-            IBlockMineStrategy strategy,
-            ITransactionFactory transactionFactory)
-        {
-            var transactions =
-                new Transactions(transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine));
-            return strategy.Mine(data =>
-                new Block(new BlockHeader(data.TimeSpan,
-                        data.LastHash,
-                        data.Hash,
-                        data.Data,
-                        data.Nonce,
-                        data.Difficulty,
-                        transactions),
-                    transactions));
         }
     }
 }

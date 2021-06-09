@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+using Microsoft.VisualBasic;
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
 using MyBlockChain.Transactions.InputsOutputs;
@@ -28,6 +30,8 @@ namespace MyBlockChain.Transactions
         public List<Input> Inputs { get; set; }
         public List<Output> Outputs { get; set; }
         public Amount Amount { get; set; }
+        
+        public DateTime Date => DateAndTime.Now;
 
         public static Result<Transaction> NewTransaction(Wallet sender,
             Address receiver,
@@ -54,5 +58,7 @@ namespace MyBlockChain.Transactions
 
             return inputTotalAmount - outputTotalAmount;
         }
+
+       
     }
 }

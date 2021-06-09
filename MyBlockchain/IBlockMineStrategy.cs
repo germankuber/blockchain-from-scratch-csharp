@@ -5,7 +5,7 @@ namespace MyBlockChain
 {
     public interface IBlockMineStrategy
     {
-        Block Mine(Func<BlockData, Block> createBlock);
+        Block Mine(Block lastBlock, string data,Func<BlockData, Block> createBlock);
         string GetBlockHash(Block block);
 
         public class BlockData

@@ -17,7 +17,7 @@ namespace MyBlockChain.Blocks
         }
 
         public IReadOnlyCollection<Block> Blocks => _blocks.AsReadOnly();
-
+        public Block LastBlock() => Blocks.Last();
         public Result<Block> AddBlock(Block block) =>
             Result.SuccessIf(block.Header.Hash.Substring(0, block.Header.Difficulty)
                              == string.Concat(Enumerable.Repeat("0", block.Header.Difficulty)),
