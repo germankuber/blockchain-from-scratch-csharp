@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+
 using CSharpFunctionalExtensions;
 
 using MyBlockChain.Transactions;
@@ -26,7 +27,7 @@ namespace MyBlockChain.Blocks
             _transactions = _transactions.Add(transaction);
         }
 
-        public Transactions Add(Transaction transaction) => 
+        public Transactions Add(Transaction transaction) =>
             new(_transactions.Add(transaction).ToList());
 
         public Transactions AddFirst(Transaction transaction) =>
@@ -46,13 +47,5 @@ namespace MyBlockChain.Blocks
             _transactions.Select(x => x.TransactionId)
                 .ToList()
                 .ToMaybe();
-    }
-
-    public static class MaybeExtensions
-    {
-        public static Maybe<List<T>> ToMaybe<T>(this List<T> @this) =>
-            @this.Any() 
-                ? Maybe<List<T>>.From(@this) 
-                : Maybe<List<T>>.None;
     }
 }

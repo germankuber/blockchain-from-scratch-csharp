@@ -20,6 +20,9 @@ namespace MyBlockChain.Blocks
             Header = header;
         }
 
+        public static Block CreateMined(BlockHeader header,
+            Transactions transactions) =>
+            new Block(header, transactions);
         public static Block Genesis(Address miner,
             ITransactionFactory transactionFactory) =>
             new(new BlockHeader(DateTime.Now.TimeOfDay,

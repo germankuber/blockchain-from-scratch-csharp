@@ -2,6 +2,7 @@
 
 namespace MyBlockChain.Transactions.InputsOutputs
 {
+
     public class Input
     {
         public Input(int transactionOutputPosition,

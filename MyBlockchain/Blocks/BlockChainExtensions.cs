@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using MyBlockChain.General;
 using MyBlockChain.Transactions;
 using MyBlockChain.Transactions.InputsOutputs;
@@ -30,13 +31,14 @@ namespace MyBlockChain.Blocks
             var balance = Amount.Create(0);
             foreach (var blockChainBlock in blockChain.Blocks)
             {
-                foreach (Transaction transaction in blockChainBlock.Transactions)
-                {
-                    foreach (var transactionOutput in transaction.Outputs)
-                        if (transactionOutput.Receiver == address)
-                            balance += transactionOutput.Amount;
+                if (blockChainBlock.Transactions != null)
+                    foreach (Transaction transaction in blockChainBlock.Transactions)
+                    {
+                        foreach (var transactionOutput in transaction.Outputs)
+                            if (transactionOutput.Receiver == address)
+                                balance += transactionOutput.Amount;
 
-                }
+                    }
             }
 
             return balance;

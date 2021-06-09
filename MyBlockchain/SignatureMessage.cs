@@ -14,6 +14,12 @@ namespace MyBlockChain
         public static SignatureMessage Sign(string message) =>
             new(Ecdsa.sign(message,
                 PrivateKey.fromString(KeysGenerator.GetPrivateKey().ToByte())).toBase64());
+
+        public static SignatureMessage Create(string signedMessage) =>
+            new SignatureMessage(signedMessage);
+
         public override string ToString() => _value;
+        public static implicit operator string(SignatureMessage signature) =>
+            signature._value;
     }
 }

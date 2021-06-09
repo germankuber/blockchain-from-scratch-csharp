@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
 using MyBlockChain.Persistence;
@@ -12,36 +13,48 @@ namespace MyBlockChain
 {
     internal class Program
     {
-        private static  BlockChain _blockChain;
-        private static  ITransactionFactory _transactionFactory;
+        private static BlockChain _blockChain;
+        private static ITransactionFactory _transactionFactory;
         private static readonly PowBlockMineStrategy _powBlockMineStrategy = new();
         private static readonly IUnconfirmedTransactionPool _unconfirmedTransactionPool
             = new UnconfirmedTransactionPool(new ValidateTransaction());
+
+        private static Miner _miner;
+        private static Wallet _wallet;
+
         private static void Main(string[] args)
         {
-            _blockChain = new BlockChain(new BlockStorage());
+            _blockChain = new BlockChain(new BlockStorage(null));
 
             _transactionFactory = new TransactionFactory(new ValidateTransaction(),
                 new CalculateTransactionIdStrategy(),
                 new CalculateInputs(_blockChain),
                 new CalculateOutputs(_blockChain, new ScriptBlockFactory(), new FeeCalculation()),
                 new ScriptBlockFactory());
-
-            var wallet = CreateWallet();
+            _wallet = CreateWallet();
             var wallet2 = CreateWallet();
 
-
-            Enumerable.Range(1, 3).Aggregate(Block.Genesis(),
-                (_, _) => _blockChain.AddBlock(Block.Mine(wallet.Address,
-                    _blockChain.LastBlock(),
-                    "",
-                    _powBlockMineStrategy,
-                    new Blocks.Transactions(),
-                    _transactionFactory)).Value);
+            _miner = new Miner(_blockChain,
+                _wallet,
+                _unconfirmedTransactionPool,
+                _powBlockMineStrategy,
+                _transactionFactory);
 
 
-            var newTransaction = wallet.MakeTransaction(wallet2.Address, Amount.Create(12));
 
+            //Enumerable.Range(1, 3).Aggregate(Block.Genesis(),
+            //    (block, _) => _blockChain.AddBlock(Block.Mine(_wallet.Address,
+            //        _blockChain.LastBlock(),
+            //        "",
+            //        _powBlockMineStrategy,
+            //        new Blocks.Transactions(),
+            //        _transactionFactory)).Value);
+
+
+            //var newTransaction = _wallet.MakeTransaction(wallet2.Address, Amount.Create(1));
+
+
+          var r =  _miner.Mine();
 
             //var blockChain = new BlockChain();
 
@@ -64,7 +77,7 @@ namespace MyBlockChain
 
 
             // Generate new Keys
-
+            var bb =_wallet.GetBalance();
             Console.ReadKey();
         }
 
