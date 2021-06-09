@@ -10,17 +10,15 @@ namespace MyBlockChain.Blocks
 
     public class Block
     {
-        public Transactions Transactions;
+        public BlockHeader Header { get; }
 
+        public Transactions Transactions;
         private Block(BlockHeader header,
             Transactions transactions)
         {
             Transactions = transactions;
             Header = header;
         }
-
-        public BlockHeader Header { get; }
-
 
         public static Block Genesis(Address miner,
             ITransactionFactory transactionFactory) =>

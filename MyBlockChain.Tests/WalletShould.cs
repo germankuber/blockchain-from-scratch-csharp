@@ -6,6 +6,7 @@ using Moq;
 
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
+using MyBlockChain.Persistence;
 using MyBlockChain.Transactions;
 using MyBlockChain.Transactions.InputsOutputs;
 using MyBlockChain.Transactions.InputsOutputs.Scripts;
@@ -23,9 +24,12 @@ namespace MyBlockChain.Tests
         private readonly PowBlockMineStrategy _powBlockMineStrategy = new();
         private readonly IUnconfirmedTransactionPool _unconfirmedTransactionPool
             = new UnconfirmedTransactionPool(new ValidateTransaction());
+
+        private readonly Mock<IBlockStorage> _blockStorageMock = new();
         public WalletShould()
         {
-            _blockChain = new BlockChain();
+            _blockStorageMock.Setup(x => x.Insert(It.IsAny<Block>()));
+            _blockChain = new BlockChain(_blockStorageMock.Object);
             _feeCalculationMock = new Mock<IFeeCalculation>();
 
             _transactionFactory = new TransactionFactory(new ValidateTransaction(),

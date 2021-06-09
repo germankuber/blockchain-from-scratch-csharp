@@ -2,6 +2,8 @@
 using System.Linq;
 
 using CSharpFunctionalExtensions;
+
+using MyBlockChain.Persistence;
 using MyBlockChain.Transactions;
 using MyBlockChain.Transactions.InputsOutputs;
 
@@ -9,10 +11,12 @@ namespace MyBlockChain.Blocks
 {
     public class BlockChain
     {
+        private readonly IBlockStorage _blockStorage;
         private readonly List<Block> _blocks = new();
 
-        public BlockChain()
+        public BlockChain(IBlockStorage blockStorage)
         {
+            _blockStorage = blockStorage;
             _blocks.Add(Block.Genesis());
         }
 
@@ -22,11 +26,14 @@ namespace MyBlockChain.Blocks
             Result.SuccessIf(block.Header.Hash.Substring(0, block.Header.Difficulty)
                              == string.Concat(Enumerable.Repeat("0", block.Header.Difficulty)),
                     true, "The hash in the block does not match with the actual difficulty")
-                .OnSuccessTry(_ =>
-                {
-                    _blocks.Add(block);
-                    return block;
-                });
+                .OnSuccessTry(_ => CreateBlock(block));
+
+        private Block CreateBlock(Block block)
+        {
+            _blocks.Add(block);
+            _blockStorage.Insert(block);
+            return block;
+        }
 
 
         public Maybe<Transaction> GetTransactionById(TransactionId id)
