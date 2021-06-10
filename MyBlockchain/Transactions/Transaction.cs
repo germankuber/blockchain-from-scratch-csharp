@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using CSharpFunctionalExtensions;
-
 using Microsoft.VisualBasic;
-
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
 using MyBlockChain.Transactions.InputsOutputs;
@@ -13,8 +10,21 @@ namespace MyBlockChain.Transactions
 {
     public class Transaction
     {
-        private readonly ITransactionIdStrategy _transactionIdStrategy;
         private static BlockChain _blockChain;
+        private readonly ITransactionIdStrategy _transactionIdStrategy;
+
+        protected Transaction(List<Input> inputs,
+            List<Output> outputs,
+            ITransactionIdStrategy transactionIdStrategy,
+            TransactionId? transactionId)
+        {
+            _transactionIdStrategy = transactionIdStrategy;
+
+            AddInputs(inputs);
+            AddOutputs(outputs);
+            TransactionId = transactionIdStrategy.Calculate(this);
+            TransactionId = transactionId;
+        }
 
         protected Transaction(List<Input> inputs,
             List<Output> outputs,
@@ -27,11 +37,6 @@ namespace MyBlockChain.Transactions
             TransactionId = transactionIdStrategy.Calculate(this);
         }
 
-        public static Transaction CreateEmpty(List<Input> inputs,
-            List<Output> outputs,
-            ITransactionIdStrategy transactionIdStrategy) =>
-            new Transaction(inputs, outputs, transactionIdStrategy);
-
         public TransactionId TransactionId { get; set; }
         public int NumberOfTransactionsInput { get; set; }
         public int NumberOfTransactionsOutputs { get; set; }
@@ -39,6 +44,14 @@ namespace MyBlockChain.Transactions
         public List<Output> Outputs { get; private set; }
 
         public DateTime Date => DateAndTime.Now;
+
+        public static Transaction CreateEmpty(TransactionId transactionId,
+            List<Input> inputs,
+            List<Output> outputs,
+            ITransactionIdStrategy transactionIdStrategy)
+        {
+            return new(inputs, outputs, transactionIdStrategy, transactionId);
+        }
 
         public static Result<Transaction> NewTransaction(Wallet sender,
             Address receiver,
@@ -52,9 +65,9 @@ namespace MyBlockChain.Transactions
             if (sender.GetBalance() <= amount)
                 return Result.Failure<Transaction>("You do not have enough money");
 
-            var inputs = calculateInputs.GetEnoughInputsFor(sender, amount);
+            var inputs = calculateInputs.GetEnoughInputsFor(sender, amount, blockChain);
             return new Transaction(inputs,
-                calculateOutputs.Calculate(sender, receiver, inputs, amount),
+                calculateOutputs.Calculate(sender, receiver, inputs, amount, blockChain),
                 transactionIdStrategy);
         }
 
@@ -71,12 +84,11 @@ namespace MyBlockChain.Transactions
             NumberOfTransactionsInput = inputs.Count;
             Inputs = inputs;
         }
+
         private void AddOutputs(List<Output> outputs)
         {
             NumberOfTransactionsOutputs = outputs.Count;
             Outputs = outputs;
         }
-
-
     }
 }

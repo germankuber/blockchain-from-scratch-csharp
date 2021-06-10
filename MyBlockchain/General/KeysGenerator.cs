@@ -11,12 +11,14 @@ namespace MyBlockChain.General
             return PrivateKey.publicKey().toString().TransformToString();
         }
 
-        public static string GetPrivateKey() => 
-            PrivateKey.toString().TransformToString();
+        public static string GetPrivateKey()
+        {
+            return PrivateKey.toString().TransformToString();
+        }
 
         public static (string PrivateKey, string PublicKey) GetPairKey(string privateKey)
         {
-            var pk =  PrivateKey.fromString(privateKey.ToByte());
+            var pk = PrivateKey.fromString(privateKey.ToByte());
             return (pk.toString().TransformToString(),
                 pk.publicKey().toString().TransformToString());
         }

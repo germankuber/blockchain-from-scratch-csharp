@@ -11,13 +11,19 @@ namespace MyBlockChain.General
             _value = value;
         }
 
-        public static implicit operator string(Hash hash) =>
-            hash._value;
+        public static implicit operator string(Hash hash)
+        {
+            return hash._value;
+        }
 
-        protected override bool EqualsCore(Hash other) =>
-            _value == other._value;
+        protected override bool EqualsCore(Hash other)
+        {
+            return _value == other._value;
+        }
 
-        protected override int GetHashCodeCore() =>
-            _value.GetHashCode();
+        protected override int GetHashCodeCore()
+        {
+            return _value.GetHashCode();
+        }
     }
 }

@@ -12,12 +12,14 @@ namespace MyBlockChain.Transactions.InputsOutputs
             return Amount.Create(@this.Sum(x => (int) x.Amount));
         }
 
-        public static Amount GetTotalAmount(this List<Input> @this, BlockChain blockChain) =>
-            @this.Select(input =>
+        public static Amount GetTotalAmount(this List<Input> @this, BlockChain blockChain)
+        {
+            return @this.Select(input =>
                     blockChain.GetOutputByTransactionIdAndPosition(new TransactionId(input.TransactionHash),
                             input.TransactionOutputPosition)
                         .Value.Amount)
                 .ToList()
-                .Sum(x=> x);
+                .Sum(x => x);
+        }
     }
 }

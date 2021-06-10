@@ -8,7 +8,7 @@ namespace MyBlockChain.Transactions
     {
         Result<Transaction> Create(Wallet sender,
             Address receiver,
-            Amount amount, 
+            Amount amount,
             BlockChain blockChain);
 
         Transaction CreateCoinBase(Address receiver,

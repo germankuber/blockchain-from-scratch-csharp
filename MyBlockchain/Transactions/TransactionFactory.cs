@@ -30,9 +30,10 @@ namespace MyBlockChain.Transactions
 
         public Result<Transaction> Create(Wallet sender,
             Address receiver,
-            Amount amount, 
-            BlockChain blockChain) =>
-            Transaction.NewTransaction(sender,
+            Amount amount,
+            BlockChain blockChain)
+        {
+            return Transaction.NewTransaction(sender,
                     receiver,
                     amount,
                     _calculateInputs,
@@ -40,10 +41,13 @@ namespace MyBlockChain.Transactions
                     _transactionIdStrategy,
                     blockChain)
                 .Bind(_validateTransaction.Validate);
+        }
 
         public Transaction CreateCoinBase(Address receiver,
-            Amount amount) =>
-            new CoinBaseTransaction(new List<Output> {new(amount, receiver, _scriptBlockFactory) },
+            Amount amount)
+        {
+            return new CoinBaseTransaction(new List<Output> {new(amount, receiver, _scriptBlockFactory)},
                 _transactionIdStrategy);
+        }
     }
 }

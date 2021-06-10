@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
 
@@ -11,26 +10,26 @@ namespace MyBlockChain
     {
         private const int FirstNonce = 1;
 
-        public PowBlockMineStrategy()
+        public Block Mine(Block lastBlock,
+            string data,
+            Func<IBlockMineStrategy.BlockData, Block> createBlock)
         {
-        }
-
-        public Block Mine(Block lastBlock, 
-                          string data, 
-                          Func<IBlockMineStrategy.BlockData, Block> createBlock) =>
-            MineBlock(DateTime.Now.TimeOfDay,
+            return MineBlock(DateTime.Now.TimeOfDay,
                 lastBlock.Header.Hash,
                 data,
                 FirstNonce,
                 BlockChainConfig.GetActualDifficulty(),
                 createBlock);
+        }
 
-        public string GetBlockHash(Block block) =>
-            CreateHash(block.Header.TimeSpan,
+        public string GetBlockHash(Block block)
+        {
+            return CreateHash(block.Header.TimeSpan,
                 block.Header.LastHash,
                 block.Header.Data,
                 block.Header.Nonce,
                 block.Header.Difficulty);
+        }
 
         private Block MineBlock(TimeSpan timeSpan,
             string lastHash,
@@ -55,8 +54,9 @@ namespace MyBlockChain
                 new IBlockMineStrategy.BlockData(timeSpan, lastHash, actualHash, data, nonce, difficulty));
         }
 
-        private static string CreateHash(TimeSpan timeSpan, string lastHash, string data, int nonce, int difficulty) =>
-            HashUtilities.Hash(new
+        private static string CreateHash(TimeSpan timeSpan, string lastHash, string data, int nonce, int difficulty)
+        {
+            return HashUtilities.Hash(new
             {
                 TimeSpan = timeSpan,
                 LastHash = lastHash,
@@ -64,5 +64,6 @@ namespace MyBlockChain
                 Difficulty = difficulty,
                 Nonce = nonce
             });
+        }
     }
 }

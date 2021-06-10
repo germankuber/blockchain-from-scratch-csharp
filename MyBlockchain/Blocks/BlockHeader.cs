@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using CSharpFunctionalExtensions;
 using MyBlockChain.General;
 
@@ -25,9 +24,8 @@ namespace MyBlockChain.Blocks
             transactions.GetAllTransactionsIds()
                 .Execute(t =>
                 {
-
                     MerkleRoot = new Hash(merkleroot.MerkleRoot.merkle(
-                        t.Select(x => (string)x.Hash)
+                        t.Select(x => (string) x.Hash)
                             .ToArray()));
                 });
         }

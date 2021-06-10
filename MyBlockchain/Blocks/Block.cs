@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Linq;
-
+using MediatR;
 using MyBlockChain.General;
 using MyBlockChain.Transactions;
 
 namespace MyBlockChain.Blocks
 {
-
-
-    public class Block
+    public class Block : IRequest<bool>
     {
-        public BlockHeader Header { get; }
-
         public Transactions Transactions;
+
         private Block(BlockHeader header,
             Transactions transactions)
         {
@@ -20,12 +17,19 @@ namespace MyBlockChain.Blocks
             Header = header;
         }
 
+        public BlockHeader Header { get; }
+
+
         public static Block CreateMined(BlockHeader header,
-            Transactions transactions) =>
-            new Block(header, transactions);
+            Transactions transactions)
+        {
+            return new(header, transactions);
+        }
+
         public static Block Genesis(Address miner,
-            ITransactionFactory transactionFactory) =>
-            new(new BlockHeader(DateTime.Now.TimeOfDay,
+            ITransactionFactory transactionFactory)
+        {
+            return new(new BlockHeader(DateTime.Now.TimeOfDay,
                     "",
                     string.Concat(Enumerable.Repeat("0", 18)),
                     "",
@@ -33,9 +37,11 @@ namespace MyBlockChain.Blocks
                     1,
                     new Transactions()),
                 new Transactions(transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine)));
+        }
 
-        public static Block Genesis() =>
-            new(new BlockHeader(DateTime.Now.TimeOfDay,
+        public static Block Genesis()
+        {
+            return new(new BlockHeader(DateTime.Now.TimeOfDay,
                     "",
                     string.Concat(Enumerable.Repeat("0", 18)),
                     "",
@@ -43,6 +49,7 @@ namespace MyBlockChain.Blocks
                     1,
                     new Transactions()),
                 new Transactions());
+        }
 
         public static Block Mine(Address miner,
             Block lastBlock,
@@ -51,19 +58,21 @@ namespace MyBlockChain.Blocks
             Transactions transactions,
             ITransactionFactory transactionFactory)
         {
-            var transactionsNew = transactions.AddFirst(
-                 transactionFactory.CreateCoinBase(miner, BlockChainConfig.AmountPerMine));
             return strategy.Mine(lastBlock,
                 data,
                 data =>
-                new Block(new BlockHeader(data.TimeSpan,
-                        data.LastHash,
-                        data.Hash,
-                        data.Data,
-                        data.Nonce,
-                        data.Difficulty,
-                        transactions),
-                    transactionsNew));
+                    new Block(new BlockHeader(data.TimeSpan,
+                            data.LastHash,
+                            data.Hash,
+                            data.Data,
+                            data.Nonce,
+                            data.Difficulty,
+                            transactions),
+                        transactions.AddFirst(
+                            transactionFactory.CreateCoinBase(miner,
+                                BlockChainConfig.AmountPerMine
+                                +
+                                transactions.GetTotalFee()))));
         }
     }
 }

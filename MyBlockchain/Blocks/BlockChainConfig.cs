@@ -10,7 +10,8 @@ namespace MyBlockChain.Blocks
         private static readonly int MinDifficulty = 0;
         public static readonly int MaxTransactionsPerBlock = 2;
         private static int _difficulty;
-        public static readonly Amount AmountPerMine = Amount.Create(15);
+        public static readonly Amount AmountPerMine = Amount.Create(5);
+        public static readonly Amount FeePerTransaction = Amount.Create(1);
 
         public static void ActualMineTime(TimeSpan time)
         {
@@ -20,6 +21,9 @@ namespace MyBlockChain.Blocks
                 ++_difficulty;
         }
 
-        public static int GetActualDifficulty() => _difficulty;
+        public static int GetActualDifficulty()
+        {
+            return _difficulty;
+        }
     }
 }

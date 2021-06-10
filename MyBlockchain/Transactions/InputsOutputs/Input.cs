@@ -2,7 +2,6 @@
 
 namespace MyBlockChain.Transactions.InputsOutputs
 {
-
     public class Input
     {
         public Input(int transactionOutputPosition,
@@ -13,6 +12,7 @@ namespace MyBlockChain.Transactions.InputsOutputs
             TransactionHash = transactionId.Hash;
             Signature = signature;
         }
+
         public Input(int transactionOutputPosition,
             Hash hash,
             SignatureMessage signature)

@@ -1,39 +1,50 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using CSharpFunctionalExtensions;
 using MyBlockChain.Blocks;
-using MyBlockChain.General;
+using MyBlockChain.Persistence;
+using MyBlockChain.Persistence.Dtos;
+using MyBlockChain.Persistence.Repositories.Interfaces;
 
 namespace MyBlockChain.Transactions.MemoryPool
 {
     public class UnconfirmedTransactionPool : IUnconfirmedTransactionPool
     {
+        private readonly ITransactionStorage _transactionStorage;
         private readonly IValidateTransaction _validateTransaction;
-        private readonly List<(Amount,Transaction)> _unconfirmedTransaction = new();
 
-        public UnconfirmedTransactionPool(IValidateTransaction validateTransaction)
+        public UnconfirmedTransactionPool(IValidateTransaction validateTransaction,
+            ITransactionStorage transactionStorage)
         {
             _validateTransaction = validateTransaction;
+            _transactionStorage = transactionStorage;
         }
-        public Result<Transaction> AddTransactionToPool(Transaction transaction) =>
-            Result.FailureIf(
-                    _unconfirmedTransaction.Any(x => x.Item2.TransactionId == transaction.TransactionId),
+
+        public Result<Transaction> AddTransactionToPool(Transaction transaction)
+        {
+            return Result.FailureIf(
+                    _transactionStorage.GetAllUtxo().Any(x => x.Transaction.TransactionId == transaction.TransactionId),
                     transaction,
                     "There is a transaction with that id")
                 .Bind(t => _validateTransaction.Validate(t))
-                .Tap(t => _unconfirmedTransaction.Add((t.GetTotalFee(), t)));
-        public Maybe<List<Transaction>> GetBestTransactions(int countOfTransactions)
-        {
-            var transactionsToOperate = _unconfirmedTransaction.OrderBy(x=> x.Item1)
-                                                        .Take(countOfTransactions);
-
-            //TODO: Remove from Memorypool
-            //transactionsToOperate.ToList().ForEach(x => _unconfirmedTransaction.RemoveAt(0));
-
-            return transactionsToOperate.Select(x => x.Item2).ToList()
-                .ToMaybe();
+                .Tap(t => _transactionStorage.Insert(new TransactionWithFee(t, t.GetTotalFee())));
         }
 
-        public int TotalTransactions() => _unconfirmedTransaction.Count();
+        public Maybe<List<Transaction>> GetBestTransactions(int countOfTransactions)
+        {
+            var transactionsToOperate = _transactionStorage.GetAllUtxo().OrderBy(x => x.Fee)
+                .Take(countOfTransactions)
+                .Select(x => x.Transaction)
+                .ToImmutableList();
+
+            transactionsToOperate.ForEach(x => _transactionStorage.Delete(x));
+            return transactionsToOperate.ToList().ToMaybe();
+        }
+
+        public int TotalTransactions()
+        {
+            return _transactionStorage.GetAllUtxo().Count();
+        }
     }
 }

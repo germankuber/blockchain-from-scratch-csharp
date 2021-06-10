@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-
 using CSharpFunctionalExtensions;
-
+using MyBlockChain.General;
 using MyBlockChain.Transactions;
 
 namespace MyBlockChain.Blocks
@@ -17,6 +16,7 @@ namespace MyBlockChain.Blocks
         {
             _transactions = transactions.ToImmutableList();
         }
+
         public Transactions()
         {
             _transactions = new List<Transaction>().ToImmutableList();
@@ -27,25 +27,46 @@ namespace MyBlockChain.Blocks
             _transactions = _transactions.Add(transaction);
         }
 
-        public Transactions Add(Transaction transaction) =>
-            new(_transactions.Add(transaction).ToList());
+        public IEnumerator GetEnumerator()
+        {
+            return _transactions.GetEnumerator();
+        }
 
-        public Transactions AddFirst(Transaction transaction) =>
-            new(_transactions.Insert(0, transaction).ToList());
+        public Transactions Add(Transaction transaction)
+        {
+            return new(_transactions.Add(transaction).ToList());
+        }
 
-        public Maybe<Transaction> GetTransactionById(TransactionId id) =>
-            _transactions.TryFirst(x => x.TransactionId == id);
+        public Transactions AddFirst(Transaction transaction)
+        {
+            return new(_transactions.Insert(0, transaction).ToList());
+        }
 
-        public IEnumerator GetEnumerator() =>
-            _transactions.GetEnumerator();
-        public Maybe<List<Transaction>> GetAll() =>
-            _transactions
+        public Maybe<Transaction> GetTransactionById(TransactionId id)
+        {
+            return _transactions.TryFirst(x => x.TransactionId == id);
+        }
+
+        public Maybe<List<Transaction>> GetAll()
+        {
+            return _transactions
                 .ToList()
                 .ToMaybe();
+        }
 
-        public Maybe<List<TransactionId>> GetAllTransactionsIds() =>
-            _transactions.Select(x => x.TransactionId)
+        public Amount GetTotalFee()
+        {
+            return _transactions
+                .ToList()
+                .Select(x => x.GetTotalFee())
+                .Sum(x => x);
+        }
+
+        public Maybe<List<TransactionId>> GetAllTransactionsIds()
+        {
+            return _transactions.Select(x => x.TransactionId)
                 .ToList()
                 .ToMaybe();
+        }
     }
 }

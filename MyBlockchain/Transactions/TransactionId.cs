@@ -11,12 +11,15 @@ namespace MyBlockChain.Transactions
         }
 
         public Hash Hash { get; }
-        protected override bool EqualsCore(TransactionId other) => 
-            Hash == other.Hash;
 
-        protected override int GetHashCodeCore() => 
-            Hash.GetHashCode();
+        protected override bool EqualsCore(TransactionId other)
+        {
+            return Hash == other.Hash;
+        }
 
-      
+        protected override int GetHashCodeCore()
+        {
+            return Hash.GetHashCode();
+        }
     }
 }
