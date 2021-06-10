@@ -84,7 +84,7 @@ namespace MyBlockChain
 
         public Amount GetBalance()
         {
-            return _outputsRepository.GetAll(Address).Sum(x => x.Amount);
+            return _outputsRepository.GetBalance(Address);
         }
 
         private bool HasEnoughAmount(Amount amount)

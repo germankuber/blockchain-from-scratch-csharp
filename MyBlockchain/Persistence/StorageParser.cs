@@ -66,7 +66,8 @@ namespace MyBlockChain.Persistence
         {
             return outputs.Select(x => new Output(Amount.Create(x.Amount),
                     new Address(x.Receiver),
-                    _scriptBlockFactory))
+                    _scriptBlockFactory,
+                    x.Id))
                 .ToList();
         }
 

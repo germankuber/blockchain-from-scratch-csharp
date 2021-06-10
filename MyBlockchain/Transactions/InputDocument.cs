@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+
 using MyBlockChain.Transactions.InputsOutputs;
 
 namespace MyBlockChain.Transactions
@@ -12,11 +13,16 @@ namespace MyBlockChain.Transactions
             Signature = input.Signature;
         }
 
-        [BsonElement("transactionHash")] public string TransactionHash { get; set; }
+        public InputDocument()
+        {
+            
+        }
+        public int Id { get; set; }
+        public TransactionDocument TransactionDocument { get; set; }
+        public string TransactionHash { get; set; }
 
-        [BsonElement("transactionOutputPosition")]
         public int TransactionOutputPosition { get; set; }
 
-        [BsonElement("signature")] public string Signature { get; set; }
+        public string Signature { get; set; }
     }
 }

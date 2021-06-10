@@ -27,15 +27,15 @@ namespace MyBlockChain.Tests
 
         public WalletShould()
         {
-            _blockStorageMock.Setup(x => x.Insert(It.IsAny<Block>()));
-            _blockChain = new BlockChain(null);
-            _feeCalculationMock = new Mock<IFeeCalculation>();
+            //_blockStorageMock.Setup(x => x.Insert(It.IsAny<Block>()));
+            //_blockChain = new BlockChain(null);
+            //_feeCalculationMock = new Mock<IFeeCalculation>();
 
-            _transactionFactory = new TransactionFactory(new ValidateTransaction(),
-                new CalculateTransactionIdStrategy(),
-                new CalculateInputs(new OutputsRepository(new StorageParser(new CalculateTransactionIdStrategy(), new ScriptBlockFactory())),new BlockRepository(new StorageParser(new CalculateTransactionIdStrategy(), new ScriptBlockFactory()))),
-                new CalculateOutputs(new ScriptBlockFactory(), new FeeCalculation()),
-                new ScriptBlockFactory());
+            //_transactionFactory = new TransactionFactory(new ValidateTransaction(),
+            //    new CalculateTransactionIdStrategy(),
+            //    new CalculateInputs(new OutputsRepository(new StorageParser(new CalculateTransactionIdStrategy(), new ScriptBlockFactory())),new BlockRepository(new StorageParser(new CalculateTransactionIdStrategy(), new ScriptBlockFactory()))),
+            //    new CalculateOutputs(new ScriptBlockFactory(), new FeeCalculation()),
+            //    new ScriptBlockFactory());
 
             //_sut = CreateWallet();
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
 using MyBlockChain.Persistence.Repositories.Interfaces;
@@ -21,7 +22,7 @@ namespace MyBlockChain.Transactions.InputsOutputs
             //TODO: RefactorizaR
             var transactionsOutputsToReturn = new List<Input>();
             var totalAmountInOutputs = Amount.Create(0);
-            var blocks = _blockRepository.GetWithTransactionsToSpent(blockChain ,sender.Address, amount);
+            var blocks = _blockRepository.GetWithTransactionsToSpent(blockChain, sender.Address, amount);
             foreach (var blockChainBlock in blocks)
                 foreach (Transaction transaction in blockChainBlock.Transactions)
                 {
@@ -34,6 +35,7 @@ namespace MyBlockChain.Transactions.InputsOutputs
                                 SignatureMessage.Sign(sender.PrivateKey)));
                             totalAmountInOutputs += transactionOutput.Amount;
                             transactionOutput.Spend(sender.PrivateKey);
+                            _outputsRepository.Spent(transactionOutput);
                             if (totalAmountInOutputs >= amount)
                                 return transactionsOutputsToReturn;
                         }

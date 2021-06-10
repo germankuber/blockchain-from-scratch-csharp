@@ -1,4 +1,8 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using System;
+
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 using MyBlockChain.Transactions.InputsOutputs;
 
 namespace MyBlockChain.Transactions
@@ -12,10 +16,16 @@ namespace MyBlockChain.Transactions
             State = output.State;
         }
 
-        [BsonElement("state")] public OutputStateEnum State { get; set; } = OutputStateEnum.UTXO;
+        public OutputDocument()
+        {
+            
+        }
+        public int Id { get; set; }
+        public TransactionDocument TransactionDocument { get; set; }
+        public OutputStateEnum State { get; set; } = OutputStateEnum.UTXO;
 
-        [BsonElement("amount")] public int Amount { get; set; }
+        public int Amount { get; set; }
 
-        [BsonElement("receiver")] public string Receiver { get; set; }
+        public string Receiver { get; set; }
     }
 }

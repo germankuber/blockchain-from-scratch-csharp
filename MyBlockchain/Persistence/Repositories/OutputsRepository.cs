@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MyBlockChain.General;
 using MyBlockChain.Persistence.Dtos;
@@ -14,69 +15,69 @@ namespace MyBlockChain.Persistence.Repositories
     public  class InputsRepository:IInputsRepository
     {
 
-        private readonly IMongoCollection<BlockDocument> _blocksCollection;
         private readonly IStorageParser _storageParser;
+        private readonly BlockChainContext _context;
 
-        public InputsRepository(IStorageParser storageParser)
+        public InputsRepository(IStorageParser storageParser,
+            BlockChainContext context)
         {
             _storageParser = storageParser;
+            _context = context;
 
-            _blocksCollection = new MongoClient(
-                    "mongodb://localhost:27017"
-                ).GetDatabase("blockchain")
-                .GetCollection<BlockDocument>("blocks");
         }
         public void Sepend(Input input)
         {
-            var inputr = _blocksCollection.AsQueryable()
-                .FirstOrDefault(x => x.Transactions.Any(x => x.TransactionId == input.TransactionHash));
-
-
-           var toSpent = inputr.Transactions.FirstOrDefault(x => x.TransactionId == input.TransactionHash)
-                .Inputs
-                .FirstOrDefault(x => x.TransactionHash == input.TransactionHash
-                                     &&
-                                     x.Signature == input.Signature
-                                     &&
-                                     x.TransactionOutputPosition == input.TransactionOutputPosition);
+      
         }
     }
     public class OutputsRepository : IOutputsRepository
     {
-        private readonly IMongoCollection<BlockDocument> _blocksCollection;
         private readonly IStorageParser _storageParser;
+        private readonly BlockChainContext _context;
 
-        public OutputsRepository(IStorageParser storageParser)
+        public OutputsRepository(IStorageParser storageParser,
+            BlockChainContext context)
         {
             _storageParser = storageParser;
-
-            _blocksCollection = new MongoClient(
-                    "mongodb://localhost:27017"
-                ).GetDatabase("blockchain")
-                .GetCollection<BlockDocument>("blocks");
+            _context = context;
         }
 
         public List<Output> GetToSpent(Address receiver, Amount amount)
         {
-            throw new System.NotImplementedException();
+            var result = _context.Outputs.GroupBy(x => x.Receiver)
+                .Select(x => new
+                {
+                    Receiver = x.Key,
+                    Amount = x.Sum(x => x.Amount),
+                    List = x.OrderBy(x => x.Amount)
+                }).Where(x => x.Amount <= amount)
+                .FirstOrDefault().List.Select(x=> _storageParser.Parse(x))
+                .ToList();
+            return result;
         }
 
         public List<Output> GetAll(Address receiver)
         {
-            return _blocksCollection.AsQueryable()
-                .Where(x => x.Transactions.Any(t => t.Outputs.Any(o => o.Receiver == receiver)))
-                .Select(s => s.Transactions.Select(o => o.Outputs))
-                .SelectMany(w => w.ToList())
-                .Where(w => w.Any(s => s.State == OutputStateEnum.UTXO))
+            return _context.Outputs.Where(x => x.State == OutputStateEnum.UTXO)
                 .ToList()
-                .Select(x => x.Select(s => _storageParser.Parse(s)))
-                .SelectMany(s => s)
+                .Select(_storageParser.Parse)
                 .ToList();
+        }
+
+        public int GetBalance(Address receiver)
+        {
+            return _context.Outputs.Where(x => x.State == OutputStateEnum.UTXO
+                                               &&
+                                               x.Receiver == receiver)
+                .Sum(x => x.Amount);
         }
 
         public void Spent(Output output)
         {
-            throw new System.NotImplementedException();
+            var result = _context.Outputs.First(x => x.Id == output.Id);
+            result.State = OutputStateEnum.Spent;
+            _context.SaveChanges();
+
         }
 
         //.Find(Builders<BlockDocument>.Filter.AnyIn(y => y.Transactions.an,))

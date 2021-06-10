@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using CSharpFunctionalExtensions;
 using Microsoft.VisualBasic;
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
+using MyBlockChain.Persistence.Dtos;
 using MyBlockChain.Transactions.InputsOutputs;
 
 namespace MyBlockChain.Transactions
@@ -36,6 +38,10 @@ namespace MyBlockChain.Transactions
             AddOutputs(outputs);
             TransactionId = transactionIdStrategy.Calculate(this);
         }
+        [ForeignKey("TransactionWithFeeId")] 
+        public int TransactionWithFeeId { get; set; }
+
+        public TransactionWithFee TransactionWithFee { get; set; }
 
         public TransactionId TransactionId { get; set; }
         public int NumberOfTransactionsInput { get; set; }

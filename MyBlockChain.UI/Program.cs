@@ -1,7 +1,12 @@
 using System;
+using System.Configuration;
 using System.Windows.Forms;
+
 using MediatR;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
 using MyBlockChain.Persistence;
 using MyBlockChain.Persistence.Dtos;
 using MyBlockChain.Persistence.Repositories;
@@ -52,7 +57,11 @@ namespace MyBlockChain.UI
                 .AddScoped<IOutputsRepository, OutputsRepository>()
                 .AddScoped<IInputsRepository, InputsRepository>()
                 .AddScoped<IBlockRepository, BlockRepository>()
-                .AddScoped<ITransactionStorage, TransactionStorage>()
+                .AddScoped<ITransactionUtxoRepository, TransactionUtxoUtxoRepository>()
+                .AddDbContext<BlockChainContext>(options =>
+                    options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=BlockChain;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"))
+                .AddDbContext<TransactionsPoolContext>(options =>
+                    options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=BlockChain-TransactionsPool;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"))
                 .AddMediatR(typeof(Transaction));
         }
     }

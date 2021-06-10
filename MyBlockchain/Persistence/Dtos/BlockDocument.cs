@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using CSharpFunctionalExtensions;
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+
 using MyBlockChain.Blocks;
 using MyBlockChain.Transactions;
 
@@ -18,10 +21,14 @@ namespace MyBlockChain.Persistence.Dtos
                 .Tap(x => Transactions = x.ToList());
         }
 
-        [BsonElement("_id")] public ObjectId Id { get; set; }
+        public BlockDocument()
+        {
+            
+        }
+        public int Id { get; set; }
 
-        [BsonElement("header")] public BlockHeaderDocument Header { get; set; }
+        public BlockHeaderDocument Header { get; set; }
 
-        [BsonElement("transactions")] public List<TransactionDocument> Transactions { get; set; }
+        public List<TransactionDocument> Transactions { get; set; }
     }
 }

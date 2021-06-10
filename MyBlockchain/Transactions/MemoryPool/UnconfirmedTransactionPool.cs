@@ -11,40 +11,39 @@ namespace MyBlockChain.Transactions.MemoryPool
 {
     public class UnconfirmedTransactionPool : IUnconfirmedTransactionPool
     {
-        private readonly ITransactionStorage _transactionStorage;
+        private readonly ITransactionUtxoRepository _transactionUtxoRepository;
         private readonly IValidateTransaction _validateTransaction;
 
         public UnconfirmedTransactionPool(IValidateTransaction validateTransaction,
-            ITransactionStorage transactionStorage)
+            ITransactionUtxoRepository transactionUtxoRepository)
         {
             _validateTransaction = validateTransaction;
-            _transactionStorage = transactionStorage;
+            _transactionUtxoRepository = transactionUtxoRepository;
         }
 
         public Result<Transaction> AddTransactionToPool(Transaction transaction)
         {
             return Result.FailureIf(
-                    _transactionStorage.GetAllUtxo().Any(x => x.Transaction.TransactionId == transaction.TransactionId),
+                    _transactionUtxoRepository.GetAllUtxo().Any(x => x.Transaction.TransactionId == transaction.TransactionId),
                     transaction,
                     "There is a transaction with that id")
                 .Bind(t => _validateTransaction.Validate(t))
-                .Tap(t => _transactionStorage.Insert(new TransactionWithFee(t, t.GetTotalFee())));
+                .Tap(t => _transactionUtxoRepository.Insert(new TransactionWithFee(t, t.GetTotalFee())));
         }
 
         public Maybe<List<Transaction>> GetBestTransactions(int countOfTransactions)
         {
-            var transactionsToOperate = _transactionStorage.GetAllUtxo().OrderBy(x => x.Fee)
+            var transactionsToOperate = _transactionUtxoRepository.GetAllUtxo().OrderBy(x => x.Fee)
                 .Take(countOfTransactions)
-                .Select(x => x.Transaction)
                 .ToImmutableList();
 
-            transactionsToOperate.ForEach(x => _transactionStorage.Delete(x));
-            return transactionsToOperate.ToList().ToMaybe();
+            transactionsToOperate.ForEach(x => _transactionUtxoRepository.Delete(x));
+            return transactionsToOperate.Select(x=> x.Transaction).ToList().ToMaybe();
         }
 
         public int TotalTransactions()
         {
-            return _transactionStorage.GetAllUtxo().Count();
+            return _transactionUtxoRepository.GetAllUtxo().Count();
         }
     }
 }

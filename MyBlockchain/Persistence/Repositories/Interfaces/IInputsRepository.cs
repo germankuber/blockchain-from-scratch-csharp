@@ -9,5 +9,6 @@ namespace MyBlockChain.Persistence.Repositories.Interfaces
         List<Output> GetToSpent(Address receiver, Amount amount);
         List<Output> GetAll(Address receiver);
         void Spent(Output output);
+        int GetBalance(Address receiver);
     }
 }

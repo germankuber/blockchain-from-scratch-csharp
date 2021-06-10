@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using MongoDB.Bson.Serialization.Attributes;
+using MyBlockChain.Persistence.Dtos;
 
 namespace MyBlockChain.Transactions
 {
@@ -17,18 +19,23 @@ namespace MyBlockChain.Transactions
             Outputs = transaction.Outputs.Select(x => new OutputDocument(x)).ToList();
         }
 
-        [BsonElement("_transactionId")] public string TransactionId { get; set; }
+        public TransactionDocument()
+        {
+            
+        }
+        public int Id { get; set; }
+        public int TransactionWithFeeDocumentId { get; set; }
+        public TransactionWithFeeDocument TransactionWithFeeDocument { get; set; }
+        public string TransactionId { get; set; }
 
-        [BsonElement("numberOfTransactionsInput")]
         public int NumberOfTransactionsInput { get; set; }
 
-        [BsonElement("numberOfTransactionsOutputs")]
         public int NumberOfTransactionsOutputs { get; set; }
 
-        [BsonElement("inputs")] public List<InputDocument> Inputs { get; set; }
+        public List<InputDocument> Inputs { get; set; }
 
-        [BsonElement("outputs")] public List<OutputDocument> Outputs { get; set; }
+        public List<OutputDocument> Outputs { get; set; }
 
-        [BsonElement("date")] public DateTime Date { get; set; }
+        public DateTime Date { get; set; }
     }
 }

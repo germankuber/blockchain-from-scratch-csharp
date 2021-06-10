@@ -5,6 +5,7 @@ using MyBlockChain.Blocks;
 using MyBlockChain.Persistence.Dtos;
 using MyBlockChain.Persistence.Repositories.Interfaces;
 using MyBlockChain.Transactions;
+using MyBlockChain.Transactions.InputsOutputs;
 using MyBlockChain.Transactions.MemoryPool;
 
 namespace MyBlockChain.Persistence.Repositories

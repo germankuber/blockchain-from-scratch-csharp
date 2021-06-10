@@ -4,10 +4,10 @@ using MyBlockChain.Transactions;
 
 namespace MyBlockChain.Persistence.Repositories.Interfaces
 {
-    public interface ITransactionStorage
+    public interface ITransactionUtxoRepository
     {
         void Insert(TransactionWithFee transaction);
         List<TransactionWithFee> GetAllUtxo();
-        void Delete(Transaction transaction);
+        void Delete(TransactionWithFee transaction);
     }
 }

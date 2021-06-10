@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+
 using MyBlockChain.Transactions;
 
 namespace MyBlockChain.Persistence.Dtos
@@ -12,10 +13,13 @@ namespace MyBlockChain.Persistence.Dtos
             TotalFee = totalFee;
         }
 
-        [BsonElement("_id")] public ObjectId Id { get; set; }
+        public TransactionWithFeeDocument()
+        {
 
-        [BsonElement("totalFee")] public int TotalFee { get; set; }
-
-        [BsonElement("transaction")] public TransactionDocument Transaction { get; set; }
+        }
+        public int Id { get; set; }
+        public int TotalFee { get; set; }
+        public bool Spend { get; set; } = false;
+        public TransactionDocument Transaction { get; set; }
     }
 }

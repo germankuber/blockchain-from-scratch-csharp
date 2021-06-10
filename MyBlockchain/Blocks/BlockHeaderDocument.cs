@@ -1,4 +1,5 @@
 ﻿using System;
+
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace MyBlockChain.Blocks
@@ -16,17 +17,18 @@ namespace MyBlockChain.Blocks
             MerkleRoot = blockHeader.MerkleRoot ?? "";
         }
 
+        public BlockHeaderDocument()
+        {
+
+        }
+
+        public int Id { get; set; }
         public TimeSpan TimeSpan { get; set; }
         public string LastHash { get; }
-
-        [BsonElement("_hash")] public string Hash { get; set; }
-
-        [BsonElement("data")] public string Data { get; set; }
-
-        [BsonElement("nonce")] public int Nonce { get; set; }
-
-        [BsonElement("difficulty")] public int Difficulty { get; set; }
-
-        [BsonElement("merkleRoot")] public string MerkleRoot { get; set; }
+        public string Hash { get; set; }
+        public string Data { get; set; }
+        public int Nonce { get; set; }
+        public int Difficulty { get; set; }
+        public string MerkleRoot { get; set; }
     }
 }

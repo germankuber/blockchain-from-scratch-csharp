@@ -10,6 +10,12 @@
     <PackageReference Include="LevelDB.Standard" Version="2.1.6.1" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="merkleroot" Version="1.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MongoDB.Driver" Version="2.12.4" />
     <PackageReference Include="NetCoreServer" Version="5.1.0" />
     <PackageReference Include="Rebex.Elliptic.Curve25519" Version="1.2.1" />
