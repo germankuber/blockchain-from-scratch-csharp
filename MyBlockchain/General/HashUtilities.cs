@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿#region
+
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+
+#endregion
 
 namespace MyBlockChain.General
 {
@@ -23,11 +27,11 @@ namespace MyBlockChain.General
         public static string Hash<T>(T data)
         {
             return SHA256.Create()
-                .ComputeHash(Encoding.UTF8
-                    .GetBytes(JsonSerializer.Serialize(data)))
-                .Aggregate(new StringBuilder(), (builder, value)
-                    => builder.Append(value.ToString("x2")))
-                .ToString();
+                         .ComputeHash(Encoding.UTF8
+                                              .GetBytes(JsonSerializer.Serialize(data)))
+                         .Aggregate(new StringBuilder(), (builder, value)
+                                                             => builder.Append(value.ToString("x2")))
+                         .ToString();
         }
     }
 }

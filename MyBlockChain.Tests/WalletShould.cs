@@ -1,15 +1,15 @@
+#region
+
 using FluentAssertions;
 using Moq;
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
-using MyBlockChain.Persistence;
-using MyBlockChain.Persistence.Repositories;
 using MyBlockChain.Persistence.Repositories.Interfaces;
 using MyBlockChain.Transactions;
-using MyBlockChain.Transactions.InputsOutputs;
-using MyBlockChain.Transactions.InputsOutputs.Scripts;
 using MyBlockChain.Transactions.MemoryPool;
 using Xunit;
+
+#endregion
 
 namespace MyBlockChain.Tests
 {
@@ -18,27 +18,12 @@ namespace MyBlockChain.Tests
         private readonly BlockChain _blockChain;
 
         private readonly Mock<IBlockRepository> _blockStorageMock = new();
-        private readonly Mock<IFeeCalculation> _feeCalculationMock;
-        private readonly PowBlockMineStrategy _powBlockMineStrategy = new();
-        private readonly Wallet _sut;
-        private readonly ITransactionFactory _transactionFactory;
+        private readonly Mock<IFeeCalculation>  _feeCalculationMock;
+        private readonly PowBlockMineStrategy   _powBlockMineStrategy = new();
+        private readonly Wallet                 _sut;
+        private readonly ITransactionFactory    _transactionFactory;
 
         private readonly IUnconfirmedTransactionPool _unconfirmedTransactionPool;
-
-        public WalletShould()
-        {
-            //_blockStorageMock.Setup(x => x.Insert(It.IsAny<Block>()));
-            //_blockChain = new BlockChain(null);
-            //_feeCalculationMock = new Mock<IFeeCalculation>();
-
-            //_transactionFactory = new TransactionFactory(new ValidateTransaction(),
-            //    new CalculateTransactionIdStrategy(),
-            //    new CalculateInputs(new OutputsRepository(new StorageParser(new CalculateTransactionIdStrategy(), new ScriptBlockFactory())),new BlockRepository(new StorageParser(new CalculateTransactionIdStrategy(), new ScriptBlockFactory()))),
-            //    new CalculateOutputs(new ScriptBlockFactory(), new FeeCalculation()),
-            //    new ScriptBlockFactory());
-
-            //_sut = CreateWallet();
-        }
 
         [Fact]
         public void Has_The_Same_Address()

@@ -1,20 +1,21 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace MyBlockChain.Persistence.Dtos
+﻿namespace MyBlockChain.Persistence.Dtos
 {
     public class WalletDocument
     {
         public WalletDocument(Wallet wallet)
         {
-            Address = wallet.Address;
+            Address    = wallet.Address;
             PrivateKey = wallet.PrivateKey;
         }
 
-        [BsonElement("_id")] public ObjectId Id { get; set; }
+        public WalletDocument()
+        {
+        }
 
-        [BsonElement("address")] public string Address { get; set; }
+        public int Id { get; set; }
 
-        [BsonElement("privateKey")] public string PrivateKey { get; set; }
+        public string Address { get; set; }
+
+        public string PrivateKey { get; set; }
     }
 }

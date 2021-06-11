@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-using MyBlockChain.General;
+﻿#region
+
 using MyBlockChain.Transactions.InputsOutputs;
+
+#endregion
 
 namespace MyBlockChain.Persistence.Repositories.Interfaces
 {

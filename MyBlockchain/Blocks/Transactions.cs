@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿#region
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using CSharpFunctionalExtensions;
 using MyBlockChain.General;
 using MyBlockChain.Transactions;
+
+#endregion
 
 namespace MyBlockChain.Blocks
 {
@@ -50,23 +54,23 @@ namespace MyBlockChain.Blocks
         public Maybe<List<Transaction>> GetAll()
         {
             return _transactions
-                .ToList()
-                .ToMaybe();
+                  .ToList()
+                  .ToMaybe();
         }
 
         public Amount GetTotalFee()
         {
             return _transactions
-                .ToList()
-                .Select(x => x.GetTotalFee())
-                .Sum(x => x);
+                  .ToList()
+                  .Select(x => x.GetTotalFee())
+                  .Sum(x => x);
         }
 
         public Maybe<List<TransactionId>> GetAllTransactionsIds()
         {
             return _transactions.Select(x => x.TransactionId)
-                .ToList()
-                .ToMaybe();
+                                .ToList()
+                                .ToMaybe();
         }
     }
 }

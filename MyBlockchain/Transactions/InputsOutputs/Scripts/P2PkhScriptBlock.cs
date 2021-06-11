@@ -1,5 +1,9 @@
-﻿using EllipticCurve;
+﻿#region
+
+using EllipticCurve;
 using MyBlockChain.General;
+
+#endregion
 
 namespace MyBlockChain.Transactions.InputsOutputs.Scripts
 {

@@ -1,24 +1,29 @@
-﻿using MyBlockChain.General;
+﻿#region
+
+using MyBlockChain.General;
 using MyBlockChain.Transactions;
+
+#endregion
 
 namespace MyBlockChain.Persistence.Dtos
 {
     public class TransactionWithFee
     {
-        public TransactionWithFee(Transaction transaction, Amount fee, int id)
+        public TransactionWithFee(TransactionDocument transaction, Amount fee, int id)
         {
             Transaction = transaction;
-            Fee = fee;
-            Id = id;
-        }
-        public TransactionWithFee(Transaction transaction, Amount fee)
-        {
-            Transaction = transaction;
-            Fee = fee;
+            Fee         = fee;
+            Id          = id;
         }
 
-        public int Id { get; set; }
-        public Transaction Transaction { get; }
-        public Amount Fee { get; }
+        public TransactionWithFee(TransactionDocument transaction, Amount fee)
+        {
+            Transaction = transaction;
+            Fee         = fee;
+        }
+
+        public int                 Id          { get; set; }
+        public TransactionDocument Transaction { get; }
+        public Amount              Fee         { get; }
     }
 }

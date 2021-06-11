@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
@@ -7,12 +9,14 @@ using MyBlockChain.Persistence.Events;
 using MyBlockChain.Transactions;
 using MyBlockChain.Transactions.InputsOutputs;
 
+#endregion
+
 namespace MyBlockChain.Blocks
 {
     public class BlockChain
     {
         private readonly List<Block> _blocks = new();
-        private readonly IMediator _mediator;
+        private readonly IMediator   _mediator;
 
         public BlockChain(IMediator mediator)
         {
@@ -30,9 +34,9 @@ namespace MyBlockChain.Blocks
         public async Task<Result<Block>> AddBlock(Block block)
         {
             return await Result.SuccessIf(block.Header.Hash.Substring(0, block.Header.Difficulty)
-                                          == string.Concat(Enumerable.Repeat("0", block.Header.Difficulty)),
-                    true, "The hash in the block does not match with the actual difficulty")
-                .OnSuccessTry(async _ => await CreateBlock(block));
+                                       == string.Concat(Enumerable.Repeat("0", block.Header.Difficulty)),
+                                          true, "The hash in the block does not match with the actual difficulty")
+                               .OnSuccessTry(async _ => await CreateBlock(block));
         }
 
         private async Task<Block> CreateBlock(Block block)

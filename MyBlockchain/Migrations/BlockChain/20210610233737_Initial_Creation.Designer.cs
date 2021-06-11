@@ -10,7 +10,7 @@ using MyBlockChain.Persistence.Repositories;
 namespace MyBlockChain.Migrations.BlockChain
 {
     [DbContext(typeof(BlockChainContext))]
-    [Migration("20210610201736_Initial_Creation")]
+    [Migration("20210610233737_Initial_Creation")]
     partial class Initial_Creation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,9 +81,32 @@ namespace MyBlockChain.Migrations.BlockChain
                     b.Property<int>("TotalFee")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TransactionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("TransactionId");
+
                     b.ToTable("TransactionsUtxo");
+                });
+
+            modelBuilder.Entity("MyBlockChain.Persistence.Dtos.WalletDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrivateKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("MyBlockChain.Transactions.InputDocument", b =>
@@ -92,6 +115,9 @@ namespace MyBlockChain.Migrations.BlockChain
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("OutputId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Signature")
                         .HasColumnType("nvarchar(max)");
@@ -160,15 +186,9 @@ namespace MyBlockChain.Migrations.BlockChain
                     b.Property<string>("TransactionId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TransactionWithFeeDocumentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BlockDocumentId");
-
-                    b.HasIndex("TransactionWithFeeDocumentId")
-                        .IsUnique();
 
                     b.ToTable("Transactions");
                 });
@@ -182,6 +202,15 @@ namespace MyBlockChain.Migrations.BlockChain
                     b.Navigation("Header");
                 });
 
+            modelBuilder.Entity("MyBlockChain.Persistence.Dtos.TransactionWithFeeDocument", b =>
+                {
+                    b.HasOne("MyBlockChain.Transactions.TransactionDocument", "Transaction")
+                        .WithMany()
+                        .HasForeignKey("TransactionId");
+
+                    b.Navigation("Transaction");
+                });
+
             modelBuilder.Entity("MyBlockChain.Transactions.InputDocument", b =>
                 {
                     b.HasOne("MyBlockChain.Transactions.TransactionDocument", "TransactionDocument")
@@ -193,11 +222,9 @@ namespace MyBlockChain.Migrations.BlockChain
 
             modelBuilder.Entity("MyBlockChain.Transactions.OutputDocument", b =>
                 {
-                    b.HasOne("MyBlockChain.Transactions.TransactionDocument", "TransactionDocument")
+                    b.HasOne("MyBlockChain.Transactions.TransactionDocument", null)
                         .WithMany("Outputs")
                         .HasForeignKey("TransactionDocumentId");
-
-                    b.Navigation("TransactionDocument");
                 });
 
             modelBuilder.Entity("MyBlockChain.Transactions.TransactionDocument", b =>
@@ -205,24 +232,11 @@ namespace MyBlockChain.Migrations.BlockChain
                     b.HasOne("MyBlockChain.Persistence.Dtos.BlockDocument", null)
                         .WithMany("Transactions")
                         .HasForeignKey("BlockDocumentId");
-
-                    b.HasOne("MyBlockChain.Persistence.Dtos.TransactionWithFeeDocument", "TransactionWithFeeDocument")
-                        .WithOne("Transaction")
-                        .HasForeignKey("MyBlockChain.Transactions.TransactionDocument", "TransactionWithFeeDocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TransactionWithFeeDocument");
                 });
 
             modelBuilder.Entity("MyBlockChain.Persistence.Dtos.BlockDocument", b =>
                 {
                     b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("MyBlockChain.Persistence.Dtos.TransactionWithFeeDocument", b =>
-                {
-                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("MyBlockChain.Transactions.TransactionDocument", b =>

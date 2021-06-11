@@ -1,8 +1,13 @@
-﻿using System;
+﻿#region
+
+using System;
+using CSharpFunctionalExtensions;
+
+#endregion
 
 namespace MyBlockChain.General
 {
-    public class Amount : IComparable<Amount>
+    public class Amount : ValueObject<Amount>, IComparable<Amount>
     {
         private readonly int _value;
 
@@ -62,6 +67,16 @@ namespace MyBlockChain.General
         public static Amount Create(int value)
         {
             return new(value);
+        }
+
+        protected override bool EqualsCore(Amount other)
+        {
+            return _value == other._value;
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            return _value.GetHashCode();
         }
     }
 }

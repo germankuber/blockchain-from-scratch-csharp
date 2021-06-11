@@ -1,16 +1,20 @@
-﻿using System;
+﻿#region
+
+using System;
 using MyBlockChain.Blocks;
 using MyBlockChain.Transactions;
+
+#endregion
 
 namespace MyBlockChain
 {
     internal class Program
     {
-        private static BlockChain _blockChain;
-        private static ITransactionFactory _transactionFactory;
+        private static          BlockChain           _blockChain;
+        private static          ITransactionFactory  _transactionFactory;
         private static readonly PowBlockMineStrategy _powBlockMineStrategy = new();
 
-        private static Miner _miner;
+        private static Miner  _miner;
         private static Wallet _wallet;
 
         private static void Main(string[] args)

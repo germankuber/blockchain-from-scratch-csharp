@@ -1,5 +1,9 @@
+#region
+
 using MediatR;
 using MyBlockChain.Blocks;
+
+#endregion
 
 namespace MyBlockChain.Tests
 {

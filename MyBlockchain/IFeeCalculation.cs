@@ -1,4 +1,8 @@
-﻿using MyBlockChain.General;
+﻿#region
+
+using MyBlockChain.General;
+
+#endregion
 
 namespace MyBlockChain
 {

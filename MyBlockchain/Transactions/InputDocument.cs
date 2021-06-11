@@ -1,6 +1,8 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿#region
 
 using MyBlockChain.Transactions.InputsOutputs;
+
+#endregion
 
 namespace MyBlockChain.Transactions
 {
@@ -9,17 +11,19 @@ namespace MyBlockChain.Transactions
         public InputDocument(Input input)
         {
             TransactionOutputPosition = input.TransactionOutputPosition;
-            TransactionHash = input.TransactionHash;
-            Signature = input.Signature;
+            TransactionHash           = input.TransactionHash;
+            Signature                 = input.Signature;
+            OutputId                  = input.OutputId;
         }
 
         public InputDocument()
         {
-            
         }
-        public int Id { get; set; }
+
+        public int                 Id                  { get; set; }
+        public int                 OutputId            { get; set; }
         public TransactionDocument TransactionDocument { get; set; }
-        public string TransactionHash { get; set; }
+        public string              TransactionHash     { get; set; }
 
         public int TransactionOutputPosition { get; set; }
 

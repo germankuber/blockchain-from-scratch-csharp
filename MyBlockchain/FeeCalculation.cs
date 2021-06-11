@@ -1,5 +1,9 @@
-﻿using MyBlockChain.Blocks;
+﻿#region
+
+using MyBlockChain.Blocks;
 using MyBlockChain.General;
+
+#endregion
 
 namespace MyBlockChain
 {

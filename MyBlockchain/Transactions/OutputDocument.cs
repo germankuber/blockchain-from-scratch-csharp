@@ -1,9 +1,8 @@
-﻿using System;
-
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿#region
 
 using MyBlockChain.Transactions.InputsOutputs;
+
+#endregion
 
 namespace MyBlockChain.Transactions
 {
@@ -11,17 +10,16 @@ namespace MyBlockChain.Transactions
     {
         public OutputDocument(Output output)
         {
-            Amount = output.Amount;
+            Amount   = output.Amount;
             Receiver = output.Receiver;
-            State = output.State;
+            State    = output.State;
         }
 
         public OutputDocument()
         {
-            
         }
-        public int Id { get; set; }
-        public TransactionDocument TransactionDocument { get; set; }
+
+        public int             Id    { get; set; }
         public OutputStateEnum State { get; set; } = OutputStateEnum.UTXO;
 
         public int Amount { get; set; }

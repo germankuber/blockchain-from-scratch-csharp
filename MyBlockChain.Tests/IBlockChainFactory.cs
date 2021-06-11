@@ -1,4 +1,8 @@
+#region
+
 using MyBlockChain.Blocks;
+
+#endregion
 
 namespace MyBlockChain.Tests
 {

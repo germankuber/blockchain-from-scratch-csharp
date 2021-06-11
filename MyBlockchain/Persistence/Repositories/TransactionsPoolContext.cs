@@ -1,29 +1,35 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿#region
+
+using Microsoft.EntityFrameworkCore;
 using MyBlockChain.Persistence.Dtos;
 using MyBlockChain.Transactions;
+
+#endregion
 
 namespace MyBlockChain.Persistence.Repositories
 {
     public class TransactionsPoolContext : DbContext
     {
+        public TransactionsPoolContext(DbContextOptions<TransactionsPoolContext> options)
+            : base(options)
+        {
+        }
+
+        public TransactionsPoolContext()
+        {
+        }
+
+        public DbSet<TransactionWithFeeDocument> TransactionsUtxo { get; set; }
+        public DbSet<InputDocument>              Inputs           { get; set; }
+        public DbSet<OutputDocument>             Outputs          { get; set; }
+        public DbSet<TransactionDocument>        Transactions     { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
-        public TransactionsPoolContext(DbContextOptions<TransactionsPoolContext> options)
-            : base(options)
-        { }
-        public TransactionsPoolContext()
-        {
 
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TransactionWithFeeDocument>()
-                .HasOne(b => b.Transaction)
-                .WithOne(i => i.TransactionWithFeeDocument)
-                .HasForeignKey<TransactionDocument>(b => b.TransactionWithFeeDocumentId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
-        public DbSet<TransactionWithFeeDocument> TransactionsUtxo { get; set; }
     }
 }

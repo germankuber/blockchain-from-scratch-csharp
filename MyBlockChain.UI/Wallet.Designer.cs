@@ -34,6 +34,14 @@ namespace MyBlockChain.UI
             this.Hash = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.LblBalance3 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.listView3 = new System.Windows.Forms.ListView();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.BtnToWallet1 = new System.Windows.Forms.Button();
+            this.BtnToWallet2 = new System.Windows.Forms.Button();
+            this.TxtTransfer = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.LblBalance2 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -44,9 +52,7 @@ namespace MyBlockChain.UI
             this.listView2 = new System.Windows.Forms.ListView();
             this.PublicKey = new System.Windows.Forms.ColumnHeader();
             this.button3 = new System.Windows.Forms.Button();
-            this.TxtTransfer = new System.Windows.Forms.TextBox();
-            this.BtnToWallet2 = new System.Windows.Forms.Button();
-            this.BtnToWallet1 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridBlocks)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -95,6 +101,10 @@ namespace MyBlockChain.UI
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button4);
+            this.groupBox2.Controls.Add(this.LblBalance3);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.listView3);
             this.groupBox2.Controls.Add(this.BtnToWallet1);
             this.groupBox2.Controls.Add(this.BtnToWallet2);
             this.groupBox2.Controls.Add(this.TxtTransfer);
@@ -114,9 +124,83 @@ namespace MyBlockChain.UI
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Wallet";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(916, 344);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(140, 23);
+            this.button4.TabIndex = 17;
+            this.button4.Text = "Mine";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // LblBalance3
+            // 
+            this.LblBalance3.AutoSize = true;
+            this.LblBalance3.Location = new System.Drawing.Point(1039, 93);
+            this.LblBalance3.Name = "LblBalance3";
+            this.LblBalance3.Size = new System.Drawing.Size(48, 15);
+            this.LblBalance3.TabIndex = 19;
+            this.LblBalance3.Text = "balance";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(950, 93);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(57, 15);
+            this.label3.TabIndex = 20;
+            this.label3.Text = "Balance : ";
+            // 
+            // listView3
+            // 
+            this.listView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader2});
+            this.listView3.HideSelection = false;
+            this.listView3.Location = new System.Drawing.Point(916, 122);
+            this.listView3.MultiSelect = false;
+            this.listView3.Name = "listView3";
+            this.listView3.Size = new System.Drawing.Size(290, 216);
+            this.listView3.TabIndex = 18;
+            this.listView3.UseCompatibleStateImageBehavior = false;
+            this.listView3.View = System.Windows.Forms.View.Details;
+            this.listView3.SelectedIndexChanged += new System.EventHandler(this.listView3_SelectedIndexChanged);
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Address";
+            this.columnHeader2.Width = 850;
+            // 
+            // BtnToWallet1
+            // 
+            this.BtnToWallet1.Location = new System.Drawing.Point(333, 203);
+            this.BtnToWallet1.Name = "BtnToWallet1";
+            this.BtnToWallet1.Size = new System.Drawing.Size(43, 23);
+            this.BtnToWallet1.TabIndex = 16;
+            this.BtnToWallet1.Text = "<<";
+            this.BtnToWallet1.UseVisualStyleBackColor = true;
+            this.BtnToWallet1.Click += new System.EventHandler(this.BtnToWallet1_Click);
+            // 
+            // BtnToWallet2
+            // 
+            this.BtnToWallet2.Location = new System.Drawing.Point(473, 203);
+            this.BtnToWallet2.Name = "BtnToWallet2";
+            this.BtnToWallet2.Size = new System.Drawing.Size(43, 23);
+            this.BtnToWallet2.TabIndex = 15;
+            this.BtnToWallet2.Text = ">>";
+            this.BtnToWallet2.UseVisualStyleBackColor = true;
+            this.BtnToWallet2.Click += new System.EventHandler(this.BtnToWallet2_Click);
+            // 
+            // TxtTransfer
+            // 
+            this.TxtTransfer.Location = new System.Drawing.Point(382, 204);
+            this.TxtTransfer.Name = "TxtTransfer";
+            this.TxtTransfer.Size = new System.Drawing.Size(85, 23);
+            this.TxtTransfer.TabIndex = 14;
+            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(750, 344);
+            this.button1.Location = new System.Drawing.Point(538, 344);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(140, 23);
             this.button1.TabIndex = 10;
@@ -127,7 +211,7 @@ namespace MyBlockChain.UI
             // LblBalance2
             // 
             this.LblBalance2.AutoSize = true;
-            this.LblBalance2.Location = new System.Drawing.Point(873, 93);
+            this.LblBalance2.Location = new System.Drawing.Point(661, 93);
             this.LblBalance2.Name = "LblBalance2";
             this.LblBalance2.Size = new System.Drawing.Size(48, 15);
             this.LblBalance2.TabIndex = 12;
@@ -136,7 +220,7 @@ namespace MyBlockChain.UI
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(784, 93);
+            this.label2.Location = new System.Drawing.Point(572, 93);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 15);
             this.label2.TabIndex = 13;
@@ -147,10 +231,10 @@ namespace MyBlockChain.UI
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(750, 122);
+            this.listView1.Location = new System.Drawing.Point(538, 122);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(493, 216);
+            this.listView1.Size = new System.Drawing.Size(290, 216);
             this.listView1.TabIndex = 11;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -187,7 +271,7 @@ namespace MyBlockChain.UI
             this.listView2.Location = new System.Drawing.Point(16, 122);
             this.listView2.MultiSelect = false;
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(502, 216);
+            this.listView2.Size = new System.Drawing.Size(284, 216);
             this.listView2.TabIndex = 8;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
@@ -208,38 +292,22 @@ namespace MyBlockChain.UI
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button1_Click);
             // 
-            // TxtTransfer
+            // button5
             // 
-            this.TxtTransfer.Location = new System.Drawing.Point(587, 196);
-            this.TxtTransfer.Name = "TxtTransfer";
-            this.TxtTransfer.Size = new System.Drawing.Size(85, 23);
-            this.TxtTransfer.TabIndex = 14;
-            // 
-            // BtnToWallet2
-            // 
-            this.BtnToWallet2.Location = new System.Drawing.Point(678, 195);
-            this.BtnToWallet2.Name = "BtnToWallet2";
-            this.BtnToWallet2.Size = new System.Drawing.Size(43, 23);
-            this.BtnToWallet2.TabIndex = 15;
-            this.BtnToWallet2.Text = ">>";
-            this.BtnToWallet2.UseVisualStyleBackColor = true;
-            this.BtnToWallet2.Click += new System.EventHandler(this.BtnToWallet2_Click);
-            // 
-            // BtnToWallet1
-            // 
-            this.BtnToWallet1.Location = new System.Drawing.Point(538, 195);
-            this.BtnToWallet1.Name = "BtnToWallet1";
-            this.BtnToWallet1.Size = new System.Drawing.Size(43, 23);
-            this.BtnToWallet1.TabIndex = 16;
-            this.BtnToWallet1.Text = "<<";
-            this.BtnToWallet1.UseVisualStyleBackColor = true;
-            this.BtnToWallet1.Click += new System.EventHandler(this.BtnToWallet1_Click);
+            this.button5.Location = new System.Drawing.Point(1323, 43);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(140, 23);
+            this.button5.TabIndex = 21;
+            this.button5.Text = "Refresh";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // Wallet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1448, 875);
+            this.ClientSize = new System.Drawing.Size(1790, 875);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "Wallet";
@@ -272,6 +340,12 @@ namespace MyBlockChain.UI
         private System.Windows.Forms.Button BtnToWallet1;
         private System.Windows.Forms.Button BtnToWallet2;
         private System.Windows.Forms.TextBox TxtTransfer;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label LblBalance3;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListView listView3;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Button button5;
     }
 }
 

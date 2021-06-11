@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using MyBlockChain.Blocks;
 using MyBlockChain.General;
+
+#endregion
 
 namespace MyBlockChain.Transactions.InputsOutputs
 {

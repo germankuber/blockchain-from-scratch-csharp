@@ -1,4 +1,8 @@
-﻿using EllipticCurve;
+﻿#region
+
+using EllipticCurve;
+
+#endregion
 
 namespace MyBlockChain.General
 {
@@ -20,7 +24,7 @@ namespace MyBlockChain.General
         {
             var pk = PrivateKey.fromString(privateKey.ToByte());
             return (pk.toString().TransformToString(),
-                pk.publicKey().toString().TransformToString());
+                    pk.publicKey().toString().TransformToString());
         }
     }
 }

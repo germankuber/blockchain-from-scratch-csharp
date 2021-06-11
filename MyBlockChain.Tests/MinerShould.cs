@@ -1,17 +1,20 @@
-using System.Threading.Tasks;
+#region
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver.Core.Operations;
 using MyBlockChain.General;
 using MyBlockChain.Persistence.Repositories.Interfaces;
 using Xunit;
+
+#endregion
+
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace MyBlockChain.Tests
 {
     public class MinerShould : BaseTest
     {
-
         [Fact]
         public async Task Mine_One_Block_When_There_Are_Not_Transactions()
         {
@@ -20,7 +23,7 @@ namespace MyBlockChain.Tests
             await Miner1.Mine();
 
             var blocks = ServiceProvider.GetRequiredService<IBlockRepository>()
-                .GetAll(BlockChain);
+                                        .GetAll(BlockChain);
             blocks.Count.Should().Be(1);
         }
 
@@ -34,7 +37,7 @@ namespace MyBlockChain.Tests
             await Miner1.Mine();
 
             var blocks = ServiceProvider.GetRequiredService<IBlockRepository>()
-                .GetAll(BlockChain);
+                                        .GetAll(BlockChain);
             blocks.Count.Should().Be(4);
         }
 
@@ -50,39 +53,21 @@ namespace MyBlockChain.Tests
             b.Should().Be(10);
         }
 
-        [Fact]
-        public async Task Mine_Transaction_Give_Fee_To_Miner()
+        [Theory]
+        [InlineData(3, 1, 3, 6)]
+        [InlineData(5, 5, 0, 5)]
+        public async Task Mine_Transaction_Give_Fee_To_Miner(int sendAmount, int balance1, int balance2, int balance3)
         {
             await Reset();
             await Miner1.Mine();
-            Wallet1.MakeTransaction(Wallet2.Address, Amount.Create(3));
+
+            Wallet1.MakeTransaction(Wallet2.Address, Amount.Create(sendAmount));
 
             await Miner3.Mine();
+            Wallet1.GetBalance().Should().Be(Amount.Create(balance1));
 
-            Wallet1.GetBalance().Should().Be(Amount.Create(1));
-            Wallet2.GetBalance().Should().Be(Amount.Create(3));
-            Wallet3.GetBalance().Should().Be(Amount.Create(6));
+            Wallet2.GetBalance().Should().Be(Amount.Create(balance2));
+            Wallet3.GetBalance().Should().Be(Amount.Create(balance3));
         }
-
-        //[Fact]
-        //public async Task Make_Transaction_Add_Transaction_To_Memory_Pool()
-        //{
-        //    var wallet2 = CreateWallet();
-        //    await _miner.Mine();
-
-        //    var a = _wallet.GetBalance();
-        //    var firstTransaction = _wallet.MakeTransaction(wallet2.Address, Amount.Create(1));
-        //    var secondTransaction = _wallet.MakeTransaction(wallet2.Address, Amount.Create(2));
-
-        //    var transactions = _serviceProvider.GetRequiredService<IUnconfirmedTransactionPool>()
-        //        .GetBestTransactions(2);
-        //    transactions.Value.Count.Should().Be(2);
-        //    transactions.Value.Any(x => x.TransactionId.Hash == firstTransaction.Value.TransactionId.Hash).Should()
-        //        .BeTrue();
-        //    transactions.Value.Any(x => x.TransactionId.Hash == secondTransaction.Value.TransactionId.Hash).Should()
-        //        .BeTrue();
-        //}
-
-
     }
 }

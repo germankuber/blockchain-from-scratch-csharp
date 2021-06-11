@@ -1,5 +1,9 @@
-﻿using EllipticCurve;
+﻿#region
+
+using EllipticCurve;
 using MyBlockChain.General;
+
+#endregion
 
 namespace MyBlockChain
 {
@@ -15,7 +19,7 @@ namespace MyBlockChain
         public static SignatureMessage Sign(string message)
         {
             return new(Ecdsa.sign(message,
-                PrivateKey.fromString(KeysGenerator.GetPrivateKey().ToByte())).toBase64());
+                                  PrivateKey.fromString(KeysGenerator.GetPrivateKey().ToByte())).toBase64());
         }
 
         public static SignatureMessage Create(string signedMessage)

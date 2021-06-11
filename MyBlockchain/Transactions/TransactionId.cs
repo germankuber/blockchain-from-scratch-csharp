@@ -1,5 +1,9 @@
-﻿using CSharpFunctionalExtensions;
+﻿#region
+
+using CSharpFunctionalExtensions;
 using MyBlockChain.General;
+
+#endregion
 
 namespace MyBlockChain.Transactions
 {
